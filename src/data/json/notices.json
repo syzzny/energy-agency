@@ -1,0 +1,112 @@
+[
+  {
+    "id": "n1",
+    "no": null,
+    "pinned": true,
+    "category": "공지",
+    "title": "2026년 주택 태양광 보급지원사업 참여기업 모집 공고",
+    "isNew": true,
+    "attach": true,
+    "date": "2026.10.20",
+    "hits": "3,482"
+  },
+  {
+    "id": "n2",
+    "no": null,
+    "pinned": true,
+    "category": "공지",
+    "title": "에너지바우처 하반기 신청 기간 연장 안내",
+    "isNew": true,
+    "attach": false,
+    "date": "2026.10.17",
+    "hits": "5,127"
+  },
+  {
+    "id": "n3",
+    "no": "1246",
+    "pinned": false,
+    "category": "공지",
+    "title": "2026년 녹색건축 인증 심사위원 공개 모집",
+    "isNew": false,
+    "attach": true,
+    "date": "2026.10.14",
+    "hits": "842"
+  },
+  {
+    "id": "n4",
+    "no": "1245",
+    "pinned": false,
+    "category": "안내",
+    "title": "추석 연휴 기간 고객센터 운영 시간 변경 안내",
+    "isNew": false,
+    "attach": false,
+    "date": "2026.10.02",
+    "hits": "1,203"
+  },
+  {
+    "id": "n5",
+    "no": "1244",
+    "pinned": false,
+    "category": "공지",
+    "title": "공공기관 에너지 효율 진단 컨설팅 참여기관 모집",
+    "isNew": false,
+    "attach": true,
+    "date": "2026.09.26",
+    "hits": "967"
+  },
+  {
+    "id": "n6",
+    "no": "1243",
+    "pinned": false,
+    "category": "공지",
+    "title": "2026년 하반기 지역에너지 전환 우수사례 공모전 결과 발표",
+    "isNew": false,
+    "attach": true,
+    "date": "2026.09.19",
+    "hits": "1,588"
+  },
+  {
+    "id": "n7",
+    "no": "1242",
+    "pinned": false,
+    "category": "공지",
+    "title": "해상풍력 주민참여 설명회 개최 안내 (부산·울산권)",
+    "isNew": false,
+    "attach": false,
+    "date": "2026.09.12",
+    "hits": "734"
+  },
+  {
+    "id": "n8",
+    "no": "1241",
+    "pinned": false,
+    "category": "공지",
+    "title": "청정수소 충전소 구축 지원사업 2차 공고",
+    "isNew": false,
+    "attach": true,
+    "date": "2026.09.05",
+    "hits": "2,016"
+  },
+  {
+    "id": "n9",
+    "no": "1240",
+    "pinned": false,
+    "category": "공지",
+    "title": "개인정보처리방침 개정 안내 (2026.09.01 시행)",
+    "isNew": false,
+    "attach": false,
+    "date": "2026.08.29",
+    "hits": "451"
+  },
+  {
+    "id": "n10",
+    "no": "1239",
+    "pinned": false,
+    "category": "공지",
+    "title": "2026년 건물 에너지효율 개선사업 선정 결과 안내",
+    "isNew": false,
+    "attach": true,
+    "date": "2026.08.22",
+    "hits": "1,377"
+  }
+]

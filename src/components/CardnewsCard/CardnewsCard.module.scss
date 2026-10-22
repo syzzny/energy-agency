@@ -1,0 +1,444 @@
+@use 'tokens' as *;
+@use 'mixins' as *;
+
+// ============================================================
+// 카드뉴스 카드 — 에너지소비효율등급 라벨 모티프
+//  모든 치수는 cqw(카드 너비의 1%) 단위. 카드가 어디에 놓여도 같은 비율로 축소된다.
+//  톤: --cn-bg(바탕) / --cn-ink(글자) / --cn-accent(강조) / --cn-soft(보조 면) / --cn-sub(보조 글자)
+// ============================================================
+
+.card {
+  --cn-bg: #e4f6ee;
+  --cn-ink: #0d3328;
+  --cn-accent: #08704f;
+  --cn-soft: #ffffff;
+  --cn-sub: #3d5d53;
+
+  container-type: inline-size;
+  position: relative;
+  aspect-ratio: 1 / 1;
+  letter-spacing: -0.04em;
+  word-break: keep-all;
+}
+
+.face {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  border-radius: 4.5cqw;
+  color: var(--cn-ink);
+  background: var(--cn-bg);
+}
+
+.wide {
+  aspect-ratio: 384 / 302;
+}
+
+// ---------- 톤 ----------
+.mint {
+  --cn-bg: #e4f6ee;
+  --cn-ink: #0d3328;
+  --cn-accent: #08704f;
+  --cn-soft: #ffffff;
+  --cn-sub: #3d5d53;
+}
+.blue {
+  --cn-bg: #e8f0ff;
+  --cn-ink: #0b1f44;
+  --cn-accent: #1d5bd8;
+  --cn-soft: #ffffff;
+  --cn-sub: #3d4f73;
+}
+.warm {
+  --cn-bg: #fff1dc;
+  --cn-ink: #3d2306;
+  --cn-accent: #c4560a;
+  --cn-soft: #fffaf2;
+  --cn-sub: #6b4a26;
+}
+.navy {
+  --cn-bg: #0b1f44;
+  --cn-ink: #ffffff;
+  --cn-accent: #5bf0bf;
+  --cn-soft: rgba(255, 255, 255, 0.08);
+  --cn-sub: rgba(255, 255, 255, 0.72);
+}
+.green {
+  --cn-bg: #0b5c45;
+  --cn-ink: #ffffff;
+  --cn-accent: #c9f27a;
+  --cn-soft: rgba(255, 255, 255, 0.1);
+  --cn-sub: rgba(255, 255, 255, 0.75);
+}
+
+// ---------- 뼈대 ----------
+.inner {
+  position: absolute;
+  inset: 0 8cqw 0 0; // 오른쪽은 등급 막대 자리
+  display: flex;
+  flex-direction: column;
+  padding: 7.5cqw 6cqw 6.5cqw 7.5cqw;
+}
+
+.topic {
+  align-self: flex-start;
+  padding: 1.2cqw 3cqw;
+  border: 0.3cqw solid currentColor;
+  border-radius: 99px;
+  font-size: 3.1cqw;
+  font-weight: 700;
+  line-height: 1.3;
+  letter-spacing: -0.02em;
+}
+
+.body {
+  position: relative;
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 0;
+}
+
+.foot {
+  display: flex;
+  align-items: center;
+  gap: 1.8cqw;
+  font-size: 3cqw;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+.logo {
+  width: 4.6cqw;
+  height: 4.6cqw;
+  color: var(--cn-accent);
+}
+.page {
+  margin-left: auto;
+  color: var(--cn-sub);
+  font-weight: 600;
+}
+
+// ---------- 등급 막대 (진행 표시) ----------
+.grade {
+  position: absolute;
+  top: 7.5cqw;
+  right: 4cqw;
+  bottom: 6.5cqw;
+  display: flex;
+  flex-direction: column;
+  gap: 0.8cqw;
+  width: 2.2cqw;
+
+  span {
+    flex: 1;
+    border-radius: 0.6cqw;
+  }
+}
+// 라벨의 ◀ 화살표처럼 지금 위치를 가리킨다
+.pointer {
+  position: absolute;
+  top: var(--at);
+  right: calc(100% + 0.9cqw);
+  width: 0;
+  height: 0;
+  border-block: 1.6cqw solid transparent;
+  border-right: 2.4cqw solid currentColor;
+  transform: translateY(-50%) rotate(180deg);
+  transition: top 0.35s $ease;
+}
+
+// ---------- 표지 ----------
+.cover {
+  justify-content: flex-start;
+  padding-top: 6cqw;
+}
+.coverTitle {
+  position: relative;
+  z-index: 1;
+  font-size: 8.2cqw;
+  font-weight: 800;
+  line-height: 1.2;
+  letter-spacing: -0.06em;
+}
+.coverSub {
+  position: relative;
+  z-index: 1;
+  max-width: 40cqw;
+  margin-top: 3.5cqw;
+  color: var(--cn-sub);
+  font-size: 3.6cqw;
+  font-weight: 500;
+  line-height: 1.45;
+}
+.coverArt {
+  position: absolute;
+  right: -3cqw;
+  bottom: -1cqw;
+  width: 40cqw;
+  aspect-ratio: 1;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    mix-blend-mode: multiply; // 흰 배경 3D 렌더를 바탕색에 녹인다
+  }
+}
+// 어두운 톤: 3D 렌더를 밝은 원판 위에 올린다
+.navy .coverArt,
+.green .coverArt {
+  border-radius: 50%;
+  background: #f1f6ff;
+  box-shadow: 0 0 0 3cqw rgba(255, 255, 255, 0.06);
+
+  img {
+    width: 82%;
+    height: 82%;
+    margin: 9%;
+  }
+}
+
+// ---------- Q&A ----------
+.qaQ {
+  font-size: 7cqw;
+  font-weight: 800;
+  line-height: 1.28;
+  letter-spacing: -0.055em;
+}
+.qaMark {
+  display: block;
+  width: fit-content;
+  margin-bottom: 3cqw;
+  padding: 0.6cqw 2.6cqw;
+  border-radius: 1.6cqw;
+  font-family: $font-num;
+  color: var(--cn-bg);
+  background: var(--cn-accent);
+  font-size: 4.2cqw;
+  letter-spacing: 0;
+}
+.qaA {
+  margin-top: 5cqw;
+  padding: 4.5cqw 5cqw;
+  border-radius: 3cqw;
+  background: var(--cn-soft);
+  font-size: 4cqw;
+  font-weight: 500;
+  line-height: 1.6;
+  letter-spacing: -0.03em;
+}
+
+// ---------- 숫자 ----------
+.statLabel {
+  color: var(--cn-sub);
+  font-size: 4.2cqw;
+  font-weight: 700;
+}
+.statValue {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 0 1.5cqw;
+  margin-top: 1cqw;
+
+  strong {
+    color: var(--cn-accent);
+    font-size: 25cqw;
+    font-weight: 800;
+    line-height: 1;
+    letter-spacing: -0.05em;
+  }
+  span {
+    font-size: 7cqw;
+    font-weight: 800;
+  }
+}
+.navy .statValue strong,
+.green .statValue strong {
+  color: var(--cn-accent);
+}
+.statCaption {
+  max-width: 64cqw;
+  margin-top: 5cqw;
+  padding-top: 4cqw;
+  border-top: 0.4cqw solid currentColor;
+  font-size: 3.9cqw;
+  font-weight: 500;
+  line-height: 1.55;
+}
+
+// ---------- 체크리스트 ----------
+.heading {
+  margin-bottom: 4.5cqw;
+  font-size: 6.4cqw;
+  font-weight: 800;
+  line-height: 1.25;
+  letter-spacing: -0.055em;
+}
+.checks {
+  display: grid;
+  gap: 2.4cqw;
+
+  li {
+    display: flex;
+    align-items: flex-start;
+    gap: 2.6cqw;
+    padding: 3cqw 3.6cqw;
+    border-radius: 2.6cqw;
+    background: var(--cn-soft);
+    font-size: 3.7cqw;
+    font-weight: 600;
+    line-height: 1.42;
+  }
+
+  :global(.icon) {
+    flex-shrink: 0;
+    width: 4.8cqw;
+    height: 4.8cqw;
+    margin-top: 0.4cqw;
+    padding: 0.8cqw;
+    border-radius: 50%;
+    color: var(--cn-bg);
+    background: var(--cn-accent);
+    stroke-width: 3.2;
+  }
+}
+
+// ---------- 절차 (실제 순서가 있는 내용만) ----------
+.steps {
+  position: relative;
+  display: grid;
+  gap: 3.4cqw;
+
+  // 번호를 잇는 세로선
+  &::before {
+    content: '';
+    position: absolute;
+    top: 3cqw;
+    bottom: 3cqw;
+    left: 3cqw;
+    width: 0.4cqw;
+    background: var(--cn-accent);
+    opacity: 0.35;
+  }
+
+  li {
+    position: relative;
+    display: grid;
+    grid-template-columns: 6cqw 1fr;
+    column-gap: 3.4cqw;
+    align-items: center;
+  }
+  strong {
+    font-size: 4.6cqw;
+    font-weight: 800;
+    line-height: 1.3;
+  }
+  span:last-child {
+    grid-column: 2;
+    color: var(--cn-sub);
+    font-size: 3.5cqw;
+    font-weight: 500;
+    line-height: 1.4;
+  }
+}
+.stepNum {
+  grid-row: span 2;
+  display: grid;
+  place-items: center;
+  width: 6cqw;
+  height: 6cqw;
+  border-radius: 50%;
+  color: var(--cn-bg);
+  background: var(--cn-accent);
+  font-size: 3.2cqw;
+  font-weight: 700;
+  letter-spacing: 0;
+}
+.stepsDense {
+  gap: 1.6cqw;
+
+  li {
+    grid-template-columns: 5.2cqw 1fr;
+  }
+  .stepNum {
+    width: 5.2cqw;
+    height: 5.2cqw;
+    font-size: 2.8cqw;
+  }
+  strong {
+    font-size: 3.8cqw;
+  }
+  span:last-child {
+    font-size: 3cqw;
+  }
+}
+
+// ---------- 마무리 ----------
+.end {
+  justify-content: center;
+}
+.endTitle {
+  font-size: 8cqw;
+  font-weight: 800;
+  line-height: 1.24;
+  letter-spacing: -0.06em;
+}
+.endBody {
+  max-width: 62cqw;
+  margin-top: 4cqw;
+  color: var(--cn-sub);
+  font-size: 3.9cqw;
+  font-weight: 500;
+  line-height: 1.55;
+}
+.endCta {
+  align-self: flex-start;
+  margin-top: 6cqw;
+  padding: 2.6cqw 4.4cqw;
+  border-radius: 99px;
+  color: var(--cn-bg);
+  background: var(--cn-accent);
+  font-size: 3.6cqw;
+  font-weight: 700;
+  line-height: 1.3;
+  letter-spacing: -0.02em;
+}
+.navy .endCta,
+.green .endCta {
+  color: #0b1f44;
+}
+
+// ---------- 메인 화면 가로형: 표지만 쓰고 글자를 조금 줄인다 ----------
+.wide {
+  .inner {
+    padding: 6cqw 5cqw 5.5cqw 6.5cqw;
+  }
+  .grade {
+    top: 6cqw;
+    bottom: 5.5cqw;
+  }
+  .cover {
+    padding-top: 4cqw;
+  }
+  .coverTitle {
+    font-size: 7cqw;
+  }
+  .coverSub {
+    max-width: 50cqw;
+    font-size: 3.4cqw;
+  }
+  .coverArt {
+    width: 34cqw;
+    right: -2cqw;
+    bottom: -1cqw;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pointer {
+    transition: none;
+  }
+}

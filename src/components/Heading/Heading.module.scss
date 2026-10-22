@@ -1,0 +1,52 @@
+@use 'tokens' as *;
+@use 'mixins' as *;
+
+.heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: sp(3);
+}
+
+.heading > div {
+  flex: 1;
+  min-width: 0;
+}
+
+.title {
+  width: fit-content;
+  display: flex;
+  align-items: center;
+  gap: sp(2.5);
+  @include type('h6');
+
+  &::before {
+    content: '';
+    width: 4px;
+    height: 20px;
+    border-radius: 2px;
+    background: c('primary');
+  }
+}
+
+.desc {
+  margin-top: sp(1.5);
+  color: c('gray-500');
+  @include type('body-sm', null, 1.5);
+}
+
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: sp(2);
+  color: c('primary');
+  @include type('label', bold);
+
+  &::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: currentColor;
+  }
+}

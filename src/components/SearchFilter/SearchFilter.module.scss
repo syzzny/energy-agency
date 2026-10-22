@@ -1,0 +1,32 @@
+@use 'tokens' as *;
+@use 'mixins' as *;
+
+// 입력 요소 모양은 Form.module.scss(.select/.input)를 쓰고, 여기서는 배치만 잡는다
+.searchFilter {
+  display: flex;
+  gap: sp(2);
+  padding: sp(6);
+  border-radius: r('xl');
+  background: c('bg');
+
+  @include down('md') {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    padding: sp(4);
+  }
+}
+
+.select {
+  flex-shrink: 0;
+  width: 140px;
+
+  @include down('md') {
+    grid-column: 1 / -1;
+    width: 100%;
+  }
+}
+
+.input {
+  flex: 1;
+  min-width: 0;
+}

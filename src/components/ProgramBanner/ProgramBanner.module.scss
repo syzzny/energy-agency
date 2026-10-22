@@ -1,0 +1,82 @@
+@use 'tokens' as *;
+@use 'mixins' as *;
+
+.banner {
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-end;
+  gap: sp(6);
+  min-height: 300px;
+  padding: sp(10);
+  overflow: hidden;
+  border-radius: r('2xl');
+  color: c('white');
+  background: c('navy');
+
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: linear-gradient(90deg, ca('overlay', 0.92) 0%, ca('overlay', 0.6) 55%, ca('overlay', 0.15) 100%);
+  }
+
+  @include hover {
+    .bg {
+      transform: scale(1.04);
+    }
+  }
+}
+
+.bg {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 6s ease-out;
+}
+
+.copy {
+  position: relative;
+  display: grid;
+  justify-items: start;
+  gap: sp(3);
+}
+
+.title {
+  @include type('h3', null, 1.32);
+}
+
+.desc {
+  color: ca('white', 0.82);
+  @include type('body');
+}
+
+.btns {
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  gap: sp(2);
+}
+
+@include down('md') {
+  .banner {
+    min-height: 0;
+    padding: sp(7) sp(6);
+
+    &::before {
+      background: linear-gradient(0deg, ca('overlay', 0.92) 20%, ca('overlay', 0.55) 100%);
+    }
+  }
+  .title {
+    font-size: fs('h5');
+  }
+  .desc br {
+    display: none;
+  }
+}

@@ -1,0 +1,66 @@
+@use 'tokens' as *;
+@use 'mixins' as *;
+
+.table {
+  width: 100%;
+  border-top: 2px solid c('ink');
+  text-align: center;
+
+  caption {
+    @include sr-only;
+  }
+
+  th,
+  td {
+    padding: sp(4) sp(3);
+    border-bottom: 1px solid c('gray-200');
+    @include type('body-sm', null, 1.5);
+  }
+
+  thead th {
+    border-bottom-color: c('ink');
+    color: c('gray-700');
+    background: c('bg');
+    font-weight: 700;
+    font-size: fs('label');
+  }
+
+  tbody th {
+    font-weight: 700;
+  }
+}
+
+.table .taL {
+  text-align: left;
+}
+.table td.em {
+  color: c('primary');
+  font-weight: 700;
+}
+.table td.muted,
+.table .muted,
+.muted {
+  color: c('gray-500');
+  font-size: fs('label');
+}
+
+.wrap {
+  @include down('md') {
+    margin-inline: -$gutter-mo;
+    padding-inline: $gutter-mo;
+    overflow-x: auto;
+
+    .table {
+      min-width: 640px;
+    }
+
+    &::after {
+      content: '← 좌우로 스크롤해 확인하세요 →';
+      display: block;
+      margin-top: sp(2);
+      color: c('gray-500');
+      text-align: center;
+      @include type('tiny', regular, 1.5);
+    }
+  }
+}

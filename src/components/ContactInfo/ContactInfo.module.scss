@@ -1,0 +1,49 @@
+@use 'tokens' as *;
+@use 'mixins' as *;
+
+.contactInfo {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  border: 1px solid c('gray-200');
+  border-radius: r('xl');
+
+  > div {
+    display: grid;
+    gap: sp(1.5);
+    padding: sp(6);
+
+    & + div {
+      border-left: 1px solid c('gray-200');
+    }
+  }
+
+  dt {
+    display: flex;
+    align-items: center;
+    gap: sp(1.5);
+    color: c('gray-500');
+    @include type('caption', medium);
+
+    :global(.icon) {
+      width: 14px;
+      height: 14px;
+    }
+  }
+
+  dd {
+    @include type('body', bold, 1.5);
+    overflow-wrap: anywhere;
+  }
+
+  @include down('md') {
+    grid-template-columns: 1fr;
+
+    > div + div {
+      border-left: 0;
+      border-top: 1px solid c('gray-200');
+    }
+    > div {
+      padding: sp(4) sp(5);
+    }
+  }
+}

@@ -1,0 +1,1 @@
+export { KeyFacts } from './KeyFacts';

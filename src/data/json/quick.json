@@ -1,0 +1,42 @@
+[
+  {
+    "label": "사업공고",
+    "icon": "megaphone",
+    "href": "sub/notice-list.html"
+  },
+  {
+    "label": "지원사업 신청",
+    "icon": "clipboard",
+    "href": "sub/business-solar.html"
+  },
+  {
+    "label": "민원 신청",
+    "icon": "message",
+    "href": "sub/petition.html"
+  },
+  {
+    "label": "정보공개 청구",
+    "icon": "folder",
+    "href": "sub/info-request.html"
+  },
+  {
+    "label": "사전정보공표",
+    "icon": "chart",
+    "href": "sub/disclosure.html"
+  },
+  {
+    "label": "보도자료",
+    "icon": "news",
+    "href": "sub/press.html"
+  },
+  {
+    "label": "채용정보",
+    "icon": "briefcase",
+    "href": "sub/recruit.html"
+  },
+  {
+    "label": "자주 묻는 질문",
+    "icon": "help",
+    "href": "sub/faq.html"
+  }
+]

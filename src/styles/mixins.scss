@@ -1,0 +1,165 @@
+@use 'sass:map';
+@use 'sass:math';
+@use 'sass:color';
+@use 'sass:list';
+@use 'tokens' as *;
+
+// ============================================================
+// 토큰 접근 함수 — 없는 키를 쓰면 빌드 에러로 바로 알려줌
+// ============================================================
+@function _get($map, $key, $name) {
+  @if not map.has-key($map, $key) {
+    @error 'Unknown #{$name} token `#{$key}`. 사용 가능: #{map.keys($map)}';
+  }
+  @return map.get($map, $key);
+}
+
+// 색: CSS 변수로 출력 (런타임 테마 변경 가능)
+@function c($key) {
+  $_: _get($color, $key, 'color');
+  @return var(--c-#{$key});
+}
+
+// 색 + 투명도: 오버레이·글래스 효과용
+@function ca($key, $alpha) {
+  @return color.change(_get($color, $key, 'color'), $alpha: $alpha);
+}
+
+// 간격: 4px 그리드 (sp(4) = 16px, sp(1.5) = 6px, sp(-4) = -16px)
+@function sp($n) {
+  @return $n * $space-unit;
+}
+
+@function r($key) {
+  @return _get($radius, $key, 'radius');
+}
+
+@function shadow($key) {
+  @return _get($shadows, $key, 'shadow');
+}
+
+@function gradient($key) {
+  @return _get($gradients, $key, 'gradient');
+}
+
+@function z($key) {
+  @return _get($z-index, $key, 'z-index');
+}
+
+@function fw($key) {
+  @return _get($font-weight, $key, 'font-weight');
+}
+
+@function dur($key) {
+  @return _get($duration, $key, 'duration');
+}
+
+// 글자 크기만 (rem) — 반응형에서 크기만 바꿀 때
+@function fs($role) {
+  $t: _get($type, $role, 'type');
+  @return math-rem(list.nth($t, 1));
+}
+
+// 반응형 (Desktop-first: 지정한 너비 "이하"에서 적용)
+@mixin down($bp) {
+  @media (max-width: #{map.get($breakpoints, $bp) - 0.02px}) {
+    @content;
+  }
+}
+@mixin up($bp) {
+  @media (min-width: map.get($breakpoints, $bp)) {
+    @content;
+  }
+}
+
+// 스크린리더 전용 텍스트
+@mixin sr-only {
+  position: absolute !important;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+// 키보드 포커스 링 (마우스 클릭엔 표시되지 않음)
+@mixin focus-ring($offset: 2px, $color: var(--c-primary)) {
+  &:focus-visible {
+    outline: 3px solid $color;
+    outline-offset: $offset;
+  }
+}
+
+@mixin container {
+  width: 100%;
+  max-width: $container + $gutter-pc * 2;
+  margin-inline: auto;
+  padding-inline: $gutter-pc;
+
+  @include down('md') {
+    padding-inline: $gutter-mo;
+  }
+}
+
+// 타이포: 역할(role) 기반 — @include type('h4');  @include type('body', bold);
+// 필요할 때만 굵기·행간·자간을 덮어씀
+@mixin type($role, $weight: null, $lh: null, $ls: null) {
+  $t: _get($type, $role, 'type');
+  @if not $weight {
+    $weight: list.nth($t, 2);
+  }
+  @if not $lh {
+    $lh: list.nth($t, 3);
+  }
+  @if not $ls {
+    $ls: list.nth($t, 4);
+  }
+  font-size: math-rem(list.nth($t, 1));
+  font-weight: fw($weight);
+  line-height: $lh;
+  letter-spacing: $ls;
+}
+
+@function math-rem($px) {
+  @return math.div($px, 16) * 1rem;
+}
+
+@mixin ellipsis($line: 1) {
+  @if $line == 1 {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  } @else {
+    display: -webkit-box;
+    overflow: hidden;
+    -webkit-line-clamp: $line;
+    -webkit-box-orient: vertical;
+  }
+}
+
+@mixin flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+// 원형/정사각 아이콘 박스
+@mixin icon-box($size, $radius: 50%, $bg: transparent) {
+  @include flex-center;
+  flex-shrink: 0;
+  width: $size;
+  height: $size;
+  border-radius: $radius;
+  background: $bg;
+}
+
+@mixin hover {
+  @media (hover: hover) {
+    &:hover {
+      @content;
+    }
+  }
+}

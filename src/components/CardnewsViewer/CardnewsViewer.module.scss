@@ -1,0 +1,117 @@
+@use 'tokens' as *;
+@use 'mixins' as *;
+
+.viewer {
+  display: grid;
+  justify-items: center;
+  gap: sp(5);
+  padding: sp(10) sp(8) sp(8);
+  border-radius: r('2xl');
+  background: c('bg');
+}
+
+.slides {
+  display: grid;
+  width: min(100%, 520px);
+  touch-action: pan-y;
+}
+
+.slide {
+  grid-area: 1 / 1;
+  visibility: hidden;
+  opacity: 0;
+  transition: opacity 0.35s, visibility 0.35s;
+}
+.slide.active {
+  visibility: visible;
+  opacity: 1;
+}
+
+.card {
+  box-shadow: shadow('photo');
+}
+
+.controls {
+  display: flex;
+  align-items: center;
+  gap: sp(4);
+}
+
+.counter {
+  min-width: 56px;
+  color: c('gray-500');
+  text-align: center;
+  @include type('body-sm', medium, 1.5, 0);
+
+  strong {
+    color: c('ink');
+  }
+}
+
+// 장 바로가기 (작은 카드 미리보기)
+.thumbs {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: sp(2);
+  width: min(100%, 520px);
+}
+.thumb {
+  display: block;
+  width: 52px;
+  border-radius: 8px;
+  transition: transform 0.2s;
+
+  @include hover {
+    transform: translateY(-2px);
+  }
+}
+.thumbOn {
+  opacity: 1;
+  outline: 2px solid c('ink');
+  outline-offset: 2px;
+}
+
+.textAlt {
+  border: 1px solid c('gray-200');
+  border-radius: r('lg');
+
+  summary {
+    padding: sp(4) sp(5);
+    cursor: pointer;
+    @include type('body-sm', bold, 1.5);
+  }
+
+  ol {
+    display: grid;
+    gap: sp(2.5);
+    padding: 0 sp(5) sp(5) sp(10);
+    list-style: decimal;
+    color: c('gray-700');
+    @include type('body-sm');
+  }
+
+  strong {
+    display: block;
+    color: c('ink');
+  }
+}
+
+@include down('md') {
+  .viewer {
+    padding: sp(5) sp(4);
+  }
+  .thumbs {
+    flex-wrap: nowrap;
+    gap: sp(1.5);
+  }
+  .thumb {
+    width: 34px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .slide {
+    transition: none;
+  }
+}

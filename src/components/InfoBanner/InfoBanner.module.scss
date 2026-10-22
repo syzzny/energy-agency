@@ -1,0 +1,66 @@
+@use 'tokens' as *;
+@use 'mixins' as *;
+
+.introBox {
+  display: flex;
+  gap: sp(3.5);
+  padding: sp(6) sp(7) sp(6) sp(6);
+  border-radius: r('xl');
+  background: c('primary-light');
+
+  strong {
+    display: block;
+    margin-bottom: sp(1);
+    @include type('body', bold, 1.5);
+  }
+
+  p {
+    color: c('gray-700');
+    @include type('body-sm', null, 1.65);
+  }
+
+  @include down('md') {
+    padding: sp(5);
+  }
+}
+
+.introBoxIcon {
+  @include icon-box(44px, 14px, c('white'));
+  flex-shrink: 0;
+  color: c('primary');
+
+  :global(.icon) {
+    width: 22px;
+    height: 22px;
+  }
+
+  @include down('md') {
+    display: none;
+  }
+}
+
+.ctaBanner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: sp(6);
+  padding: sp(7) sp(8);
+  border-radius: r('xl');
+  background: c('primary-light');
+
+  strong {
+    display: block;
+    @include type('title', null, 1.4);
+  }
+  p {
+    margin-top: sp(1);
+    color: c('gray-700');
+    @include type('label', regular, 1.6);
+  }
+
+  @include down('md') {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: sp(6) sp(5);
+  }
+}

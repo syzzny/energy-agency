@@ -1,0 +1,154 @@
+@use 'tokens' as *;
+@use 'mixins' as *;
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: sp(2);
+  height: 52px;
+  padding: 0 sp(5.5);
+  border: 1px solid transparent;
+  border-radius: r('md');
+  white-space: nowrap;
+  @include type('body-sm', bold, 1.4);
+  transition: background 0.2s, border-color 0.2s, color 0.2s;
+
+  :global(.icon) {
+    width: 18px;
+    height: 18px;
+    stroke-width: 2;
+    transition: transform 0.2s;
+  }
+
+  @include hover {
+    .iconMove {
+      transform: translateX(3px);
+    }
+  }
+}
+
+.primary {
+  color: c('white');
+  background: c('primary');
+
+  @include hover {
+    background: c('primary-dark');
+  }
+}
+.dark {
+  color: c('white');
+  background: c('ink');
+
+  @include hover {
+    background: c('ink-hover');
+  }
+}
+.line {
+  color: c('ink');
+  border-color: c('gray-300');
+  background: c('white');
+
+  @include hover {
+    border-color: c('ink');
+  }
+}
+.white {
+  color: c('primary');
+  background: c('white');
+}
+.light {
+  color: c('ink');
+  background: c('white');
+
+  @include hover {
+    background: c('gray-100');
+  }
+}
+.ghostWhite {
+  color: c('white');
+  border-color: ca('white', 0.5);
+
+  @include hover {
+    background: ca('white', 0.1);
+  }
+}
+
+.sm {
+  height: 36px;
+  padding: 0 sp(4);
+  @include type('label', bold, 1.4);
+}
+.lg {
+  height: 56px;
+  padding: 0 sp(10);
+  @include type('body', bold, 1.4);
+}
+.pill {
+  border-radius: r('pill');
+}
+
+// ---------- IconButton ----------
+.iconBtn {
+  @include icon-box(40px, 50%);
+  border: 1px solid c('gray-300');
+  color: c('ink');
+  background: c('white');
+  transition: border-color 0.2s;
+
+  :global(.icon) {
+    width: 18px;
+    height: 18px;
+    stroke-width: 2;
+  }
+
+  @include hover {
+    border-color: c('ink');
+  }
+}
+.iconBtnSm {
+  width: 32px;
+  height: 32px;
+
+  :global(.icon) {
+    width: 16px;
+    height: 16px;
+  }
+}
+.iconBtnXs {
+  width: 28px;
+  height: 28px;
+
+  :global(.icon) {
+    width: 14px;
+    height: 14px;
+  }
+}
+.iconBtn.onDark {
+  border-color: ca('white', 0.25);
+  color: c('white');
+  background: transparent;
+
+  @include hover {
+    border-color: c('white');
+  }
+}
+
+// ---------- MoreLink ----------
+.moreLink {
+  display: inline-flex;
+  align-items: center;
+  gap: sp(1);
+  color: c('gray-700');
+  @include type('label');
+
+  :global(.icon) {
+    width: 16px;
+    height: 16px;
+    stroke-width: 2;
+  }
+
+  @include hover {
+    color: c('primary');
+  }
+}

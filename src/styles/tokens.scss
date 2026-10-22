@@ -1,0 +1,168 @@
+// ============================================================
+// Design Tokens — 에너지전환진흥원
+//
+//  여기 값만 바꾸면 사이트 전체에 반영됩니다. 컴포넌트에서는 숫자·색을 직접 쓰지 말고
+//  아래 함수/믹스인으로만 꺼내 씁니다.
+//
+//   색       c('primary')            → var(--c-primary)      (CSS 변수, 런타임 변경 가능)
+//            ca('white', 0.6)        → rgba(255,255,255,.6)  (투명도가 필요할 때)
+//   간격     sp(4)                   → 16px                  (4px 그리드, 0.5 단위 허용)
+//   글자     @include type('h4')     → 크기·굵기·행간·자간 한 번에
+//            fs('body')              → 1rem                  (크기만 필요할 때)
+//   반경     r('lg')                 → 16px
+//   그림자   shadow('md')
+//   그라디언트 gradient('brand')
+//   z-index  z('header')
+//   반응형   @include down('md') { }
+// ============================================================
+
+// ---------- Color ----------
+$color: (
+  // brand
+  'primary': #1d5bd8,
+  'primary-dark': #1449b3,
+  'primary-light': #eaf1ff,
+  'navy': #0b1f44,
+  'brand-deep': #0b2e73,
+  'brand-teal': #22b58c,
+  'green': #0b8160,
+  'mint': #5bf0bf,
+  // status
+  'red': #e5484d,
+  'new': #ff5a4e,
+  'warning-bg': #fff7e6,
+  'warning-text': #8a5300,
+  'warning-icon': #c77700,
+  // neutral
+  'ink': #151a26,
+  'ink-hover': #2a3142,
+  'gray-700': #3d4556,
+  'gray-500': #5c6375,
+  'gray-300': #c9cfda,
+  'gray-200': #e3e7ee,
+  'gray-100': #f2f4f8,
+  'bg': #f5f7fb,
+  'white': #fff,
+  'black': #000,
+  'footer': #0e1524,
+  // overlay (사진 위 어둡게 깔리는 색)
+  'overlay': #061434,
+  'dim': #0b1020,
+  // tint (일러스트·카드 배경용 파스텔)
+  'tint-blue': #eef4ff,
+  'tint-blue-2': #dbe8ff,
+  'tint-blue-3': #c4deff,
+  'tint-mint': #e6f8f1,
+  'tint-mint-2': #ddf6ec,
+  'tint-mint-3': #bfeedd,
+  'tint-peach': #fff3d6,
+  'tint-peach-2': #ffd9c4,
+  'tint-row': #f7faff,
+  'tint-map': #eef2f6,
+);
+
+// ---------- Gradient ----------
+$gradients: (
+  'brand': linear-gradient(135deg, #0b2e73 0%, #1d5bd8 60%, #22b58c 100%),
+  'soft-blue': linear-gradient(135deg, #dbe8ff, #c4deff),
+  'soft-mint': linear-gradient(135deg, #ddf6ec, #bfeedd),
+  'soft-warm': linear-gradient(135deg, #fff3d6, #ffd9c4),
+  'soft-mix': linear-gradient(135deg, #ddf6ec, #c4deff),
+  'tint': linear-gradient(135deg, #eef4ff 0%, #e6f8f1 100%),
+  'deep': linear-gradient(135deg, #0b2e73, #1d5bd8),
+);
+
+// ---------- Spacing (4px grid) ----------
+$space-unit: 4px;
+
+// ---------- Breakpoint ----------
+$breakpoints: (
+  'xl': 1280px,
+  'lg': 1024px,
+  'md': 768px,
+  'sm': 480px,
+);
+
+// ---------- Layout ----------
+$container: 1200px;
+$gutter-pc: 24px;
+$gutter-mo: 20px;
+$header-h: 88px;
+$header-h-mo: 64px;
+$lnb-w: 232px;
+
+// ---------- Radius ----------
+$radius: (
+  'xs': 6px,
+  'sm': 8px,
+  'md': 12px,
+  'lg': 16px,
+  'xl': 20px,
+  '2xl': 24px,
+  '3xl': 28px,
+  'pill': 999px,
+);
+
+// ---------- Typography ----------
+$font-base: 'Pretendard Variable', Pretendard, -apple-system, BlinkMacSystemFont, system-ui,
+  'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif;
+$font-num: 'Inter', $font-base;
+
+$font-weight: (
+  'regular': 400,
+  'medium': 500,
+  'semibold': 600,
+  'bold': 700,
+);
+
+// 역할(role) 기반 타입 스케일 — (크기px, 굵기, 행간, 자간)
+$type: (
+  'mark': (72, 'bold', 1, 0),
+  'display': (52, 'bold', 1.28, -0.04em),
+  'h1': (44, 'bold', 1.3, -0.04em),
+  'h2': (40, 'bold', 1.35, -0.04em),
+  'h3': (36, 'bold', 1.36, -0.04em),
+  'h4': (28, 'bold', 1.4, -0.03em),
+  'h5': (24, 'bold', 1.4, -0.03em),
+  'h6': (22, 'bold', 1.4, -0.03em),
+  'title-lg': (20, 'bold', 1.4, -0.03em),
+  'title': (18, 'bold', 1.45, -0.02em),
+  'body-lg': (17, 'regular', 1.6, -0.02em),
+  'body': (16, 'regular', 1.65, -0.02em),
+  'body-sm': (15, 'regular', 1.6, -0.02em),
+  'label': (14, 'medium', 1.5, -0.02em),
+  'caption': (13, 'regular', 1.5, -0.02em),
+  'tiny': (12, 'medium', 1.4, -0.02em),
+  'micro': (10, 'bold', 1, 0),
+);
+
+// ---------- Elevation ----------
+$shadows: (
+  'sm': 0 4px 12px rgba(13, 38, 102, 0.08),
+  'md': 0 12px 32px rgba(5, 20, 64, 0.18),
+  'panel': 0 16px 32px rgba(10, 26, 64, 0.12),
+  'glass': 0 16px 40px rgba(4, 16, 48, 0.25),
+  'photo': 0 20px 40px rgba(11, 31, 68, 0.12),
+  'text': 0 2px 24px rgba(0, 0, 0, 0.2),
+);
+
+// ---------- Z-index ----------
+$z-index: (
+  'base': 1,
+  'raised': 2,
+  'sticky-tab': 10,
+  'lnb': 50,
+  'top-btn': 90,
+  'header': 100,
+  'modal': 200,
+  'toast': 300,
+  'skip': 1000,
+);
+
+// ---------- Motion ----------
+$ease: cubic-bezier(0.2, 0.8, 0.2, 1);
+$duration: (
+  'fast': 0.15s,
+  'base': 0.2s,
+  'slow': 0.4s,
+);

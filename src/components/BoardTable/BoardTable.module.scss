@@ -1,0 +1,280 @@
+@use 'tokens' as *;
+@use 'mixins' as *;
+
+.boardTable {
+  width: 100%;
+  border-top: 2px solid c('ink');
+  table-layout: fixed;
+  text-align: center;
+
+  caption {
+    @include sr-only;
+  }
+
+  th {
+    padding: sp(3.5) sp(2);
+    border-bottom: 1px solid c('ink');
+    color: c('gray-700');
+    background: c('bg');
+    @include type('label', bold);
+  }
+
+  td {
+    padding: sp(4.5) sp(2);
+    border-bottom: 1px solid c('gray-200');
+    color: c('gray-500');
+    @include type('label', regular);
+  }
+}
+
+.colNo {
+  width: 88px;
+}
+.colFile {
+  width: 64px;
+}
+.colDate {
+  width: 120px;
+}
+.colHit {
+  width: 80px;
+}
+.colWriter {
+  width: 96px;
+}
+.colState {
+  width: 104px;
+}
+
+.title {
+  padding-inline: sp(2) sp(4) !important;
+  text-align: left !important;
+
+  a {
+    display: inline-flex;
+    align-items: center;
+    gap: sp(2);
+    max-width: 100%;
+    color: c('ink');
+    @include type('body', medium, 1.5);
+
+    > span:first-child {
+      @include ellipsis;
+    }
+
+    @include hover {
+      > span:first-child {
+        text-decoration: underline;
+      }
+    }
+  }
+}
+
+.pinned {
+  background: c('tint-row');
+
+  .title a {
+    font-weight: 700;
+  }
+}
+
+.boardTable :global(.icon) {
+  width: 18px;
+  height: 18px;
+  margin: 0 auto;
+}
+// 제목 옆 아이콘 (비공개 자물쇠 등)
+.boardTable .title :global(.icon) {
+  width: 16px;
+  height: 16px;
+  margin: 0;
+  color: c('gray-500');
+}
+
+// 모바일: 행을 카드형으로
+@include down('md') {
+  .boardTable {
+    thead {
+      @include sr-only;
+    }
+    colgroup {
+      display: none;
+    }
+
+    tr {
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      align-items: center;
+      gap: sp(1.5) sp(2.5);
+      padding: sp(4) sp(1);
+      border-bottom: 1px solid c('gray-200');
+    }
+
+    td {
+      padding: 0;
+      border: 0;
+      font-size: fs('caption');
+    }
+
+    .title {
+      grid-column: 1 / -1;
+      grid-row: 1;
+      padding: 0 !important;
+
+      a {
+        white-space: normal;
+        font-size: fs('body-sm');
+      }
+      > span:first-child {
+        @include ellipsis(2);
+        white-space: normal;
+      }
+    }
+
+    .no {
+      grid-row: 2;
+      text-align: left;
+    }
+    .isNumber {
+      display: none;
+    }
+    .file {
+      display: none;
+    }
+    .date {
+      grid-row: 2;
+      text-align: left;
+    }
+    .hit {
+      grid-row: 2;
+      text-align: right;
+
+      &::before {
+        content: '조회 ';
+      }
+    }
+    .writer {
+      grid-row: 2;
+      text-align: left;
+    }
+    .state {
+      grid-row: 2;
+      text-align: right;
+    }
+  }
+}
+
+// ---------- 공표 목록 (사전정보공표) — 원본 data-table 기준 ----------
+.disclosureTable {
+  table-layout: auto;
+
+  th {
+    padding: sp(4) sp(3);
+    @include type('label', bold, 1.5);
+  }
+  .colNo {
+    width: 72px;
+  }
+  .colCat {
+    width: 112px;
+  }
+  .colCycle,
+  .colTime {
+    width: 96px;
+  }
+  .colDept {
+    width: 128px;
+  }
+  .colGo {
+    width: 96px;
+  }
+
+  td {
+    padding: sp(4) sp(3);
+    color: c('gray-500');
+    @include type('label', regular, 1.5);
+  }
+  td.taL {
+    color: c('ink');
+    font-weight: 500;
+    font-size: fs('body-sm');
+    text-align: left;
+  }
+
+  @include down('md') {
+    border-top: 2px solid c('ink');
+
+    thead {
+      @include sr-only;
+    }
+    colgroup {
+      display: none;
+    }
+
+    tr {
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: sp(2) sp(3);
+      align-items: center;
+      padding: sp(4) 0;
+      border-bottom: 1px solid c('gray-200');
+    }
+
+    td {
+      padding: 0;
+      border: 0;
+      text-align: left;
+    }
+
+    .no {
+      display: none;
+    }
+    .cat {
+      grid-column: 1;
+      grid-row: 1;
+    }
+    .taL {
+      grid-column: 2 / -1;
+      grid-row: 1;
+    }
+    .cycle,
+    .time,
+    .dept {
+      grid-row: 2;
+      font-size: fs('caption');
+    }
+    .cycle::before {
+      content: '주기 ';
+    }
+    .go {
+      grid-column: 3;
+      grid-row: 2;
+    }
+    .dept {
+      display: none;
+    }
+  }
+}
+
+.goBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: sp(1);
+  height: 30px;
+  padding: 0 sp(2.5) 0 sp(3);
+  border: 1px solid c('gray-300');
+  border-radius: r('sm');
+  color: c('gray-700');
+  background: c('white');
+  @include type('caption', medium, 1.4);
+
+  :global(.icon) {
+    width: 13px;
+    height: 13px;
+    stroke-width: 2;
+  }
+
+  @include hover {
+    border-color: c('ink');
+  }
+}

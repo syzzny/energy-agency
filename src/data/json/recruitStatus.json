@@ -1,0 +1,5 @@
+[
+  { "key": "all", "label": "전체", "count": 5 },
+  { "key": "open", "label": "진행중", "count": 3 },
+  { "key": "closed", "label": "마감", "count": 2 }
+]

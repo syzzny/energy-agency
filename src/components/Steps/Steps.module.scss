@@ -1,0 +1,85 @@
+@use 'tokens' as *;
+@use 'mixins' as *;
+
+.steps {
+  display: flex;
+  gap: sp(6);
+}
+
+.item {
+  position: relative;
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: sp(3.5);
+  padding: sp(5.5) sp(4.5);
+  border-radius: r('xl');
+  background: c('bg');
+
+  &:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    right: sp(-4);
+    width: 8px;
+    height: 8px;
+    margin-top: sp(-1);
+    border-top: 2px solid c('gray-300');
+    border-right: 2px solid c('gray-300');
+    transform: rotate(45deg);
+  }
+
+  &:first-child {
+    color: c('white');
+    background: c('primary');
+
+    .num {
+      color: c('white');
+      background: transparent;
+      box-shadow: inset 0 0 0 1.5px ca('white', 0.6);
+    }
+    p {
+      color: ca('white', 0.85);
+    }
+  }
+
+  strong {
+    display: block;
+    @include type('body', bold, 1.5);
+  }
+
+  p {
+    margin-top: sp(1);
+    color: c('gray-500');
+    @include type('caption');
+  }
+}
+
+.num {
+  @include icon-box(36px, 50%, c('white'));
+  font-family: $font-num;
+  color: c('primary');
+  @include type('caption', bold, 1, 0);
+}
+
+@include down('lg') {
+  .steps {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: sp(2);
+  }
+  .item::after {
+    display: none;
+  }
+}
+
+@include down('md') {
+  .steps {
+    grid-template-columns: 1fr;
+  }
+  .item {
+    flex-direction: row;
+    align-items: center;
+    padding: sp(4);
+  }
+}

@@ -1,0 +1,34 @@
+[
+  {
+    "label": "신재생에너지 보급률",
+    "icon": "sun",
+    "value": "32.4",
+    "unit": "%",
+    "desc": "전년 대비 4.1%p 상승한 국내 전력 중 재생에너지 비중",
+    "highlight": false
+  },
+  {
+    "label": "에너지바우처 지원",
+    "icon": "home",
+    "value": "12.6",
+    "unit": "만 가구",
+    "desc": "냉·난방비 부담을 덜어 드린 취약계층 가구 수",
+    "highlight": true
+  },
+  {
+    "label": "온실가스 감축량",
+    "icon": "leaf",
+    "value": "320",
+    "unit": "만 톤",
+    "desc": "보급 설비와 효율 개선 사업으로 줄인 연간 CO₂ 배출량",
+    "highlight": false
+  },
+  {
+    "label": "협력 지자체·기관",
+    "icon": "zap",
+    "value": "148",
+    "unit": "개",
+    "desc": "지역 맞춤형 에너지전환을 함께 추진하는 파트너",
+    "highlight": false
+  }
+]

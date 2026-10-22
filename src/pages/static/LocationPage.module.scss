@@ -1,0 +1,101 @@
+@use 'tokens' as *;
+@use 'mixins' as *;
+
+.map {
+  position: relative;
+  overflow: hidden;
+  border-radius: r('2xl');
+  background: c('tint-map');
+  aspect-ratio: 904 / 420;
+
+  > svg {
+    width: 100%;
+    height: 100%;
+  }
+
+  @include down('md') {
+    aspect-ratio: 4 / 3;
+  }
+}
+
+.pin {
+  position: absolute;
+  top: 46%;
+  left: 50%;
+  display: grid;
+  justify-items: center;
+  transform: translate(-50%, -100%);
+
+  span {
+    padding: sp(2.5) sp(4);
+    border-radius: r('md');
+    color: c('white');
+    background: c('ink');
+    box-shadow: shadow('sm');
+    white-space: nowrap;
+    @include type('label', bold, 1.4);
+  }
+
+  :global(.icon) {
+    width: 40px;
+    height: 40px;
+    margin-top: sp(1);
+    color: c('primary');
+    fill: c('primary');
+    stroke: c('white');
+    stroke-width: 1.5;
+  }
+}
+
+.mapLinks {
+  position: absolute;
+  right: sp(4);
+  bottom: sp(4);
+  display: flex;
+  gap: sp(2);
+
+  @include down('md') {
+    left: sp(4);
+    right: auto;
+  }
+}
+
+.addressCard {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: sp(6);
+  padding: sp(6) sp(7);
+  border: 1px solid c('gray-200');
+  border-radius: r('xl');
+
+  dl {
+    display: grid;
+    gap: sp(2);
+  }
+  div {
+    display: flex;
+    gap: sp(4);
+    @include type('body-sm');
+  }
+  dt {
+    flex-shrink: 0;
+    width: 64px;
+    color: c('gray-500');
+    font-weight: 500;
+  }
+  dd {
+    font-weight: 500;
+  }
+
+  @include down('md') {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: sp(5);
+
+    div {
+      flex-direction: column;
+      gap: 0;
+    }
+  }
+}

@@ -1,0 +1,299 @@
+@use 'tokens' as *;
+@use 'mixins' as *;
+
+// ---------- Sub Visual ----------
+.subVisual {
+  position: relative;
+  overflow: hidden;
+  color: c('white');
+  background: c('navy');
+  isolation: isolate;
+}
+
+.subVisualBg {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 60%;
+  animation: subVisualZoom 12s ease-out both;
+}
+
+.subVisual::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(90deg, ca('overlay', 0.9) 0%, ca('overlay', 0.62) 45%, ca('primary', 0.25) 100%);
+}
+
+.subVisualInner {
+  position: relative;
+  padding-block: sp(16) sp(18);
+}
+
+.subVisualRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: sp(4);
+  margin-top: sp(4);
+}
+
+.subVisualTitle {
+  @include type('h1');
+  text-shadow: shadow('text');
+}
+
+@include down('md') {
+  .subVisualInner {
+    padding-block: sp(9) sp(10);
+  }
+  .subVisualTitle {
+    font-size: fs('h4');
+  }
+}
+
+@keyframes subVisualZoom {
+  from {
+    transform: scale(1.1);
+  }
+}
+
+.breadcrumb ol {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: sp(1.5);
+  color: ca('white', 0.75);
+  @include type('caption', null, 1.4);
+}
+
+.breadcrumb li {
+  display: flex;
+  align-items: center;
+  gap: sp(1.5);
+
+  & + li::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    margin-right: 2px;
+    border-top: 1.5px solid ca('white', 0.5);
+    border-right: 1.5px solid ca('white', 0.5);
+    transform: rotate(45deg);
+  }
+
+  &[aria-current] {
+    color: c('white');
+    font-weight: 700;
+  }
+}
+
+.breadcrumb a {
+  display: flex;
+
+  @include hover {
+    text-decoration: underline;
+  }
+}
+
+.breadcrumb :global(.icon) {
+  width: 16px;
+  height: 16px;
+}
+
+.pageTools {
+  display: flex;
+  gap: sp(2);
+}
+
+.pageToolsBtn {
+  @include icon-box(44px, 50%, ca('white', 0.12));
+  border: 1px solid ca('white', 0.3);
+  color: c('white');
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  transition: background 0.2s;
+
+  @include hover {
+    background: ca('white', 0.24);
+  }
+
+  :global(.icon) {
+    width: 18px;
+    height: 18px;
+  }
+}
+
+@include down('md') {
+  .pageToolsBtn {
+    width: 38px;
+    height: 38px;
+  }
+  // 모바일에서는 인쇄 버튼을 숨긴다 (원본과 동일)
+  .pageToolsPrint {
+    display: none;
+  }
+}
+
+// ---------- Sub Body (LNB + Content) ----------
+.subBody {
+  display: flex;
+  align-items: flex-start;
+  gap: sp(16);
+  padding-block: sp(16) sp(30);
+
+  @include down('lg') {
+    display: block;
+    padding-block: 0 sp(20);
+  }
+}
+
+.content {
+  flex: 1;
+  min-width: 0;
+
+  &:focus {
+    outline: none;
+  }
+
+  > * + * {
+    margin-top: var(--content-gap, 28px);
+  }
+}
+
+// 본문 안에서 한 칸 더 띄울 블록 (원본 .content > .mt-lg)
+.content > :global(.mt-lg) {
+  margin-top: sp(10);
+}
+
+.contentWideGap {
+  --content-gap: #{sp(14)};
+
+  @include down('md') {
+    --content-gap: #{sp(10)};
+  }
+}
+
+// ---------- LNB ----------
+.lnb {
+  position: sticky;
+  top: calc(var(--header-h) + 32px);
+  flex-shrink: 0;
+  width: $lnb-w;
+}
+
+.lnbTitle {
+  padding-bottom: sp(5);
+  border-bottom: 2px solid c('ink');
+  @include type('h6');
+}
+
+.lnbList {
+  display: grid;
+  gap: sp(1);
+  padding-top: sp(3);
+}
+
+.lnbLink {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: sp(3) sp(3.5) sp(3) sp(4);
+  border-radius: r('md');
+  color: c('gray-700');
+  @include type('body-sm', medium, 1.4);
+  transition: background 0.2s, color 0.2s;
+
+  :global(.icon) {
+    width: 16px;
+    height: 16px;
+    stroke-width: 2;
+    opacity: 0;
+  }
+
+  @include hover {
+    background: c('gray-100');
+  }
+
+  &.isCurrent {
+    color: c('primary');
+    font-weight: 700;
+    background: c('primary-light');
+
+    :global(.icon) {
+      opacity: 1;
+    }
+  }
+}
+
+.lnbHelp {
+  margin-top: sp(8);
+  padding: sp(5);
+  border-radius: r('lg');
+  background: c('bg');
+
+  strong {
+    display: block;
+    margin-bottom: sp(1.5);
+    @include type('label', bold);
+  }
+  p {
+    color: c('gray-500');
+    @include type('caption', null, 1.6);
+  }
+}
+
+@include down('lg') {
+  .lnb {
+    position: sticky;
+    top: var(--header-h);
+    z-index: z('lnb');
+    width: auto;
+    margin-inline: -$gutter-pc;
+    margin-bottom: sp(8);
+    border-bottom: 1px solid c('gray-200');
+    background: c('white');
+  }
+
+  .lnbTitle,
+  .lnbHelp {
+    @include sr-only;
+  }
+
+  .lnbList {
+    display: flex;
+    gap: sp(1);
+    padding: sp(3) $gutter-pc;
+    overflow-x: auto;
+    scrollbar-width: none;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
+  }
+
+  .lnbLink {
+    flex-shrink: 0;
+    padding: sp(2.5) sp(4);
+    border-radius: r('pill');
+    white-space: nowrap;
+    @include type('label', null, 1.4);
+
+    :global(.icon) {
+      display: none;
+    }
+  }
+}
+
+@include down('md') {
+  .lnb {
+    margin-inline: -$gutter-mo;
+  }
+  .lnbList {
+    padding-inline: $gutter-mo;
+  }
+}

@@ -1,0 +1,105 @@
+@use 'tokens' as *;
+@use 'mixins' as *;
+
+// ---------- FAQ 검색 (검정 테두리 큰 검색창) ----------
+.faqSearch {
+  display: flex;
+  align-items: center;
+  gap: sp(2.5);
+  height: 64px;
+  padding: sp(1.5) sp(1.5) sp(1.5) sp(5.5);
+  border: 2px solid c('ink');
+  border-radius: r('lg');
+
+  > :global(.icon) {
+    width: 20px;
+    height: 20px;
+    color: c('gray-500');
+    stroke-width: 2;
+  }
+
+  input {
+    flex: 1;
+    min-width: 0;
+    height: 100%;
+    border: 0;
+    @include type('body', null, 1.5);
+
+    &::placeholder {
+      color: c('gray-500');
+    }
+    &:focus {
+      outline: none;
+    }
+  }
+
+  &:focus-within {
+    border-color: c('primary');
+  }
+
+  > button {
+    height: 48px;
+  }
+
+  @include down('md') {
+    height: 56px;
+    padding-left: sp(4);
+
+    input {
+      font-size: fs('body-sm');
+    }
+    > button {
+      height: 42px;
+      padding: 0 sp(4);
+    }
+  }
+}
+
+// ---------- 하단 질문 유도 (네이비 배너) ----------
+.helpCta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: sp(6);
+  margin-top: sp(10) !important;
+  padding: sp(8);
+  border-radius: r('2xl');
+  color: c('white');
+  background: c('navy');
+
+  strong {
+    display: block;
+    @include type('title-lg');
+  }
+  p {
+    color: ca('white', 0.7);
+    @include type('body-sm', null, 1.5);
+  }
+
+  @include down('md') {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: sp(6);
+  }
+}
+
+.helpCtaBody {
+  display: flex;
+  align-items: center;
+  gap: sp(4.5);
+}
+
+.helpCtaIcon {
+  @include icon-box(56px, 18px, ca('white', 0.1));
+  flex-shrink: 0;
+  color: c('mint');
+
+  :global(.icon) {
+    width: 26px;
+    height: 26px;
+  }
+
+  @include down('md') {
+    display: none;
+  }
+}

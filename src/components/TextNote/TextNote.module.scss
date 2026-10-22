@@ -1,0 +1,16 @@
+@use 'tokens' as *;
+@use 'mixins' as *;
+
+.textNote {
+  display: flex;
+  align-items: center;
+  gap: sp(1.5);
+  color: c('gray-500');
+  @include type('label', regular);
+
+  :global(.icon) {
+    flex-shrink: 0;
+    width: 16px;
+    height: 16px;
+  }
+}

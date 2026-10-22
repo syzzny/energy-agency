@@ -1,0 +1,32 @@
+[
+  {
+    "key": "all",
+    "label": "전체",
+    "count": 48
+  },
+  {
+    "key": "biz",
+    "label": "지원사업",
+    "count": 14
+  },
+  {
+    "key": "apply",
+    "label": "신청·접수",
+    "count": 12
+  },
+  {
+    "key": "fund",
+    "label": "보조금",
+    "count": 9
+  },
+  {
+    "key": "web",
+    "label": "누리집 이용",
+    "count": 8
+  },
+  {
+    "key": "etc",
+    "label": "기타",
+    "count": 5
+  }
+]

@@ -1,0 +1,28 @@
+@use 'tokens' as *;
+@use 'mixins' as *;
+
+.noticeBox {
+  display: flex;
+  gap: sp(2.5);
+  padding: sp(4.5) sp(5) sp(4.5) sp(4.5);
+  border-radius: r('lg');
+  color: c('warning-text');
+  background: c('warning-bg');
+  @include type('body-sm', medium);
+
+  :global(.icon) {
+    width: 20px;
+    height: 20px;
+    margin-top: 1px;
+    color: c('warning-icon');
+  }
+}
+
+.info {
+  color: c('gray-700');
+  background: c('primary-light');
+
+  :global(.icon) {
+    color: c('primary');
+  }
+}

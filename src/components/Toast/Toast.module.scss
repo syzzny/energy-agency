@@ -1,0 +1,23 @@
+@use 'tokens' as *;
+@use 'mixins' as *;
+
+.toast {
+  position: fixed;
+  left: 50%;
+  bottom: sp(8);
+  z-index: z('toast');
+  padding: sp(3.5) sp(5.5);
+  border-radius: r('pill');
+  color: c('white');
+  background: c('ink');
+  opacity: 0;
+  pointer-events: none;
+  transform: translate(-50%, 12px);
+  transition: 0.3s $ease;
+  @include type('label');
+}
+
+.show {
+  opacity: 1;
+  transform: translate(-50%, 0);
+}

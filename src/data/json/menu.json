@@ -1,0 +1,134 @@
+[
+  {
+    "id": "about",
+    "name": "기관소개",
+    "children": [
+      {
+        "id": "greeting",
+        "name": "인사말",
+        "href": "sub/greeting.html"
+      },
+      {
+        "id": "vision",
+        "name": "비전·경영목표",
+        "href": "sub/vision.html"
+      },
+      {
+        "id": "history",
+        "name": "연혁",
+        "href": "sub/history.html"
+      },
+      {
+        "id": "org",
+        "name": "조직 및 업무",
+        "href": "sub/org.html"
+      }
+    ],
+    "visual": "photo-tower"
+  },
+  {
+    "id": "business",
+    "name": "주요사업",
+    "children": [
+      {
+        "id": "solar",
+        "name": "태양광 보급지원",
+        "href": "sub/business-solar.html"
+      },
+      {
+        "id": "wind",
+        "name": "해상풍력 인프라",
+        "href": "sub/business-wind.html"
+      },
+      {
+        "id": "efficiency",
+        "name": "건물 에너지효율 개선",
+        "href": "sub/business-efficiency.html"
+      }
+    ],
+    "visual": "photo-green-city"
+  },
+  {
+    "id": "info",
+    "name": "정보공개",
+    "children": [
+      {
+        "id": "disclosure",
+        "name": "사전정보공표",
+        "href": "sub/disclosure.html"
+      },
+      {
+        "id": "request",
+        "name": "정보공개 청구",
+        "href": "sub/info-request.html"
+      }
+    ],
+    "visual": "photo-smart-city"
+  },
+  {
+    "id": "news",
+    "name": "알림·소식",
+    "children": [
+      {
+        "id": "notice",
+        "name": "공지사항",
+        "href": "sub/notice-list.html"
+      },
+      {
+        "id": "press",
+        "name": "보도자료",
+        "href": "sub/press.html"
+      },
+      {
+        "id": "recruit",
+        "name": "채용공고",
+        "href": "sub/recruit.html"
+      },
+      {
+        "id": "cardnews",
+        "name": "카드뉴스",
+        "href": "sub/cardnews.html"
+      }
+    ],
+    "visual": "photo-wind"
+  },
+  {
+    "id": "participation",
+    "name": "참여·민원",
+    "children": [
+      {
+        "id": "petition",
+        "name": "온라인 민원 신청",
+        "href": "sub/petition.html"
+      },
+      {
+        "id": "status",
+        "name": "민원 처리현황 조회",
+        "href": "sub/petition-status.html"
+      }
+    ],
+    "visual": "photo-home"
+  },
+  {
+    "id": "support",
+    "name": "고객지원",
+    "children": [
+      {
+        "id": "faq",
+        "name": "자주 묻는 질문",
+        "href": "sub/faq.html"
+      },
+      {
+        "id": "qna",
+        "name": "묻고 답하기",
+        "href": "sub/qna.html"
+      },
+      {
+        "id": "location",
+        "name": "찾아오시는 길",
+        "href": "sub/location.html"
+      }
+    ],
+    "visual": "photo-green-building"
+  }
+]

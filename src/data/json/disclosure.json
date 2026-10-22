@@ -1,0 +1,82 @@
+[
+  {
+    "no": "52",
+    "category": "ops",
+    "categoryLabel": "기관운영",
+    "title": "이사회 회의록 및 주요 의결사항",
+    "cycle": "수시",
+    "time": "개최 후 1개월",
+    "dept": "경영기획실",
+    "linkLabel": "이사회 회의록"
+  },
+  {
+    "no": "51",
+    "category": "budget",
+    "categoryLabel": "사업·예산",
+    "title": "2026년도 예산서 및 사업계획",
+    "cycle": "연 1회",
+    "time": "1월",
+    "dept": "예산재무팀",
+    "linkLabel": "2026년도 예산서"
+  },
+  {
+    "no": "50",
+    "category": "budget",
+    "categoryLabel": "사업·예산",
+    "title": "재생에너지 보급지원사업 집행 현황",
+    "cycle": "분기",
+    "time": "분기 익월",
+    "dept": "재생에너지보급실",
+    "linkLabel": "보급지원사업 집행 현황"
+  },
+  {
+    "no": "49",
+    "category": "contract",
+    "categoryLabel": "계약",
+    "title": "수의계약 체결 현황",
+    "cycle": "월",
+    "time": "익월 10일",
+    "dept": "계약관리팀",
+    "linkLabel": "수의계약 체결 현황"
+  },
+  {
+    "no": "48",
+    "category": "hr",
+    "categoryLabel": "인사·조직",
+    "title": "임직원 채용 현황 및 결과",
+    "cycle": "수시",
+    "time": "채용 완료 후",
+    "dept": "인사총무팀",
+    "linkLabel": "채용 현황"
+  },
+  {
+    "no": "47",
+    "category": "stat",
+    "categoryLabel": "통계",
+    "title": "신재생에너지 보급 통계",
+    "cycle": "연 1회",
+    "time": "6월",
+    "dept": "데이터전략팀",
+    "linkLabel": "보급 통계"
+  },
+  {
+    "no": "46",
+    "category": "ops",
+    "categoryLabel": "기관운영",
+    "title": "업무추진비 집행 내역",
+    "cycle": "월",
+    "time": "익월 말",
+    "dept": "경영기획실",
+    "linkLabel": "업무추진비 집행 내역"
+  },
+  {
+    "no": "45",
+    "category": "contract",
+    "categoryLabel": "계약",
+    "title": "입찰 및 낙찰 정보",
+    "cycle": "수시",
+    "time": "계약 체결 후",
+    "dept": "계약관리팀",
+    "linkLabel": "입찰 및 낙찰 정보"
+  }
+]

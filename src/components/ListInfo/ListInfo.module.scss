@@ -1,0 +1,32 @@
+@use 'tokens' as *;
+@use 'mixins' as *;
+
+.listInfo {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: sp(3);
+}
+
+.count {
+  color: c('gray-700');
+  @include type('body-sm', null, 1.5);
+
+  strong {
+    color: c('primary');
+  }
+  span {
+    margin-left: sp(1.5);
+    color: c('gray-500');
+    font-size: fs('label');
+  }
+}
+
+.select {
+  flex-shrink: 0;
+  width: 120px;
+
+  select {
+    height: 40px;
+  }
+}

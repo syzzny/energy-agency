@@ -1,0 +1,81 @@
+@use 'tokens' as *;
+@use 'mixins' as *;
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+  height: 24px;
+  padding: 0 sp(2);
+  border-radius: r('xs');
+  color: c('gray-700');
+  background: c('gray-100');
+  @include type('tiny', bold, 1);
+}
+
+.primary {
+  color: c('primary');
+  background: c('primary-light');
+}
+.solid {
+  color: c('white');
+  background: c('primary');
+}
+.green {
+  color: c('white');
+  background: c('green');
+}
+.glass {
+  color: c('white');
+  background: ca('white', 0.12);
+}
+
+.newBadge {
+  @include icon-box(18px, 50%, c('new'));
+  font-family: $font-num;
+  color: c('white');
+  @include type('micro');
+}
+
+// ---------- Chip ----------
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: sp(2);
+
+  @include down('md') {
+    flex-wrap: nowrap;
+    margin-inline: -$gutter-mo;
+    padding-inline: $gutter-mo;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+}
+
+.chip {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: sp(1);
+  height: 40px;
+  padding: 0 sp(4.5);
+  border: 1px solid c('gray-200');
+  border-radius: r('pill');
+  color: c('gray-700');
+  background: c('white');
+  white-space: nowrap;
+  @include type('label', null, 1.4);
+  transition: 0.2s;
+
+  @include hover {
+    border-color: c('gray-500');
+  }
+
+  &[aria-pressed='true'],
+  &[aria-selected='true'] {
+    border-color: c('ink');
+    color: c('white');
+    background: c('ink');
+    font-weight: 700;
+  }
+}

@@ -1,0 +1,230 @@
+@use 'tokens' as *;
+@use 'mixins' as *;
+
+.mission {
+  position: relative;
+  display: grid;
+  justify-items: center;
+  gap: sp(3);
+  padding: sp(10);
+  border-radius: r('2xl');
+  text-align: center;
+  background: c('bg');
+  overflow: hidden;
+
+  > *:not(img) {
+    position: relative;
+  }
+}
+.missionImg {
+  position: absolute;
+  right: sp(-6);
+  bottom: sp(-10);
+  width: 180px;
+  height: 180px;
+  opacity: 0.9;
+  mix-blend-mode: multiply;
+  pointer-events: none;
+
+  @include down('md') {
+    right: sp(-5);
+    bottom: sp(-6);
+    width: 110px;
+    height: 110px;
+  }
+}
+.missionLabel {
+  position: relative;
+  padding: sp(1.5) sp(3.5);
+  border: 1px solid c('gray-200');
+  border-radius: r('pill');
+  color: c('primary');
+  background: c('white');
+  @include type('tiny', bold, null, 0.08em);
+}
+.missionText {
+  position: relative;
+  @include type('h4', null, 1.42);
+}
+@include down('md') {
+  .mission {
+    padding: sp(7) sp(5);
+  }
+  .missionText {
+    font-size: fs('title-lg');
+  }
+}
+
+.vision {
+  position: relative;
+  isolation: isolate;
+  display: grid;
+  justify-items: center;
+  gap: sp(3);
+  padding: sp(12) sp(10);
+  overflow: hidden;
+  border-radius: r('2xl');
+  color: c('white');
+  text-align: center;
+  background: c('navy');
+}
+.visionBg {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.vision::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(135deg, ca('brand-deep', 0.88), ca('primary', 0.72) 60%, ca('brand-teal', 0.65));
+}
+.visionLabel {
+  position: relative;
+  padding: sp(1.5) sp(3.5);
+  border-radius: r('pill');
+  background: ca('white', 0.16);
+  @include type('tiny', bold, null, 0.08em);
+}
+.visionText {
+  position: relative;
+  @include type('h3');
+}
+.visionTargets {
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: sp(2);
+  margin-top: sp(2);
+
+  li {
+    padding: sp(2) sp(4);
+    border: 1px solid ca('white', 0.25);
+    border-radius: r('pill');
+    background: ca('white', 0.12);
+    @include type('label', null, 1.4);
+  }
+}
+@include down('md') {
+  .vision {
+    padding: sp(9) sp(5);
+  }
+  .visionText {
+    font-size: fs('h5');
+  }
+}
+
+.values {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: sp(4);
+
+  @include down('lg') {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  @include down('sm') {
+    grid-template-columns: 1fr;
+  }
+}
+.valuesItem {
+  display: grid;
+  align-content: start;
+  gap: sp(4.5);
+  padding: sp(7) sp(6);
+  border: 1px solid c('gray-200');
+  border-radius: r('xl');
+
+  small {
+    display: block;
+    font-family: $font-num;
+    color: c('primary');
+    @include type('tiny', semibold, null, 0.04em);
+  }
+  h4 {
+    @include type('title-lg');
+  }
+  p {
+    color: c('gray-500');
+    @include type('label', regular, 1.65);
+  }
+}
+.valuesIcon {
+  @include icon-box(52px, r('lg'), c('primary-light'));
+  color: c('primary');
+
+  :global(.icon) {
+    width: 26px;
+    height: 26px;
+  }
+}
+
+.strategy {
+  display: grid;
+  gap: sp(3);
+}
+.strategyItem {
+  display: flex;
+  align-items: center;
+  gap: sp(6);
+  padding: sp(5) sp(6) sp(5) sp(5);
+  border-radius: r('xl');
+  background: c('bg');
+
+  @include down('lg') {
+    flex-direction: column;
+    align-items: stretch;
+    gap: sp(4);
+  }
+  @include down('md') {
+    padding: sp(5);
+  }
+}
+.strategyGoal {
+  display: flex;
+  align-items: center;
+  gap: sp(3.5);
+  flex-shrink: 0;
+  width: 300px;
+  @include type('body-lg', bold, 1.45);
+
+  @include down('lg') {
+    width: auto;
+  }
+}
+.strategyNum {
+  @include icon-box(48px, 14px, c('navy'));
+  font-family: $font-num;
+  color: c('white');
+  @include type('body', bold, 1, 0);
+}
+.strategyItem:first-child .strategyNum {
+  background: c('primary');
+}
+.strategyTasks {
+  display: grid;
+  flex: 1;
+  grid-template-columns: repeat(3, 1fr);
+  gap: sp(2);
+
+  @include down('md') {
+    grid-template-columns: 1fr;
+  }
+
+  li {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: sp(2.5) sp(3.5);
+    border: 1px solid c('gray-200');
+    border-radius: r('md');
+    color: c('gray-700');
+    text-align: center;
+    background: c('white');
+    @include type('label', null, 1.4);
+  }
+}

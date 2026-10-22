@@ -1,0 +1,103 @@
+@use 'tokens' as *;
+@use 'mixins' as *;
+
+.year {
+  display: grid;
+  grid-template-columns: 180px 1fr;
+  gap: sp(6);
+  padding: sp(10) 0;
+  border-top: 1px solid c('gray-200');
+
+  &:first-child {
+    border-top: 2px solid c('ink');
+  }
+
+  @include down('md') {
+    grid-template-columns: 1fr;
+    gap: sp(5);
+    padding: sp(7) 0;
+  }
+}
+
+.label {
+  font-family: $font-num;
+  color: c('gray-500');
+  @include type('h2', null, 1.1, -0.03em);
+
+  small {
+    display: block;
+    margin-top: sp(2);
+    font-family: $font-base;
+    color: c('gray-500');
+    @include type('label', null, 1.4);
+  }
+
+  @include down('md') {
+    font-size: fs('h4');
+  }
+}
+.year:first-child .label {
+  color: c('primary');
+}
+
+.list {
+  position: relative;
+  display: grid;
+  gap: sp(5);
+  padding-left: sp(7);
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: sp(2);
+    bottom: sp(2);
+    left: 5px;
+    width: 2px;
+    background: c('gray-200');
+  }
+}
+
+.item {
+  position: relative;
+  display: grid;
+  grid-template-columns: 48px 1fr;
+  gap: sp(3);
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: sp(1.5);
+    left: sp(-7);
+    width: 12px;
+    height: 12px;
+    border: 3px solid c('white');
+    border-radius: 50%;
+    background: c('gray-300');
+    box-shadow: 0 0 0 1px c('gray-300');
+  }
+
+  @include down('md') {
+    grid-template-columns: 40px 1fr;
+  }
+}
+.item.key::before {
+  background: c('primary');
+  box-shadow: 0 0 0 1px c('primary');
+}
+
+.month {
+  font-family: $font-num;
+  color: c('gray-500');
+  @include type('body-sm', semibold, 1.5, 0);
+}
+
+.text {
+  @include type('body', null, 1.6);
+
+  @include down('md') {
+    font-size: fs('body-sm');
+  }
+}
+.item.key .text {
+  font-weight: 700;
+}

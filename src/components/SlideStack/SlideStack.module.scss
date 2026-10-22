@@ -1,0 +1,20 @@
+@use 'tokens' as *;
+@use 'mixins' as *;
+
+.stack {
+  display: grid;
+  overflow: hidden;
+}
+
+.slide {
+  grid-area: 1 / 1;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity dur('slow') $ease, transform dur('slow') $ease;
+}
+
+.active {
+  position: relative;
+  opacity: 1;
+  visibility: visible;
+}

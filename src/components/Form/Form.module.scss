@@ -1,0 +1,356 @@
+@use 'tokens' as *;
+@use 'mixins' as *;
+
+// ---------- Input / Select / Textarea ----------
+.input,
+.select select,
+.textarea {
+  width: 100%;
+  height: 52px;
+  padding: 0 sp(4);
+  border: 1px solid c('gray-300');
+  border-radius: r('md');
+  background: c('white');
+  @include type('body-sm', null, 1.5);
+  transition: border-color 0.2s, box-shadow 0.2s;
+
+  &::placeholder {
+    color: c('gray-500');
+  }
+
+  @include hover {
+    border-color: c('gray-500');
+  }
+
+  &:focus,
+  &:focus-visible {
+    outline: none;
+    border-color: c('primary');
+    box-shadow: 0 0 0 1px c('primary'), 0 0 0 4px ca('primary', 0.15);
+  }
+
+  &:disabled,
+  &[readonly] {
+    color: c('gray-700');
+    background: c('gray-100');
+    border-color: c('gray-300');
+    cursor: default;
+    box-shadow: none;
+  }
+
+  &[aria-invalid='true'] {
+    border-color: c('red');
+  }
+}
+
+.select {
+  position: relative;
+  display: block;
+
+  select {
+    padding-right: sp(10);
+    appearance: none;
+    cursor: pointer;
+  }
+
+  &::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    right: sp(4.5);
+    width: 8px;
+    height: 8px;
+    margin-top: sp(-1.5);
+    border-right: 2px solid c('gray-700');
+    border-bottom: 2px solid c('gray-700');
+    transform: rotate(45deg);
+    pointer-events: none;
+  }
+}
+
+.fieldControls > .selectTel {
+  flex: 0 0 96px;
+}
+
+.textarea {
+  height: 200px;
+  padding: sp(3.5) sp(4);
+  line-height: 1.6;
+  resize: vertical;
+}
+
+// ---------- Field ----------
+.field {
+  display: grid;
+  gap: sp(2);
+  min-width: 0;
+  border: 0;
+}
+
+.fieldLabel {
+  display: inline-flex;
+  gap: sp(1);
+  @include type('body-sm', bold, 1.5);
+}
+
+.req {
+  color: c('red');
+}
+
+.fieldControls {
+  display: flex;
+  align-items: center;
+  gap: sp(2);
+
+  > .input,
+  > .select {
+    flex: 1;
+    min-width: 0;
+  }
+}
+.fieldControlsEmail {
+  > .select {
+    flex: 0 0 180px;
+  }
+
+  @include down('md') {
+    flex-wrap: wrap;
+
+    > .input {
+      flex: 1 1 calc(50% - 20px);
+    }
+    > .select {
+      flex-basis: 100%;
+    }
+  }
+}
+
+.sep {
+  flex-shrink: 0;
+  color: c('gray-500');
+}
+
+.fieldHelp {
+  color: c('gray-500');
+  @include type('caption');
+}
+.fieldHelpError {
+  color: c('red');
+}
+
+.fieldCounter {
+  color: c('gray-500');
+  text-align: right;
+  @include type('caption');
+}
+
+.fieldFoot {
+  display: flex;
+  justify-content: space-between;
+  gap: sp(3);
+
+  .fieldCounter {
+    margin-left: auto;
+  }
+}
+
+.fieldRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: sp(6) sp(4);
+
+  @include down('md') {
+    grid-template-columns: 1fr;
+  }
+}
+
+.inputZip {
+  max-width: 160px;
+}
+
+// ---------- Radio / Checkbox ----------
+.radioGroup {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: sp(3) sp(6);
+  min-height: 52px;
+}
+
+.radio,
+.checkbox {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: sp(2);
+  cursor: pointer;
+  @include type('body-sm', medium, 1.5);
+
+  input {
+    position: absolute;
+    opacity: 0;
+    width: 1px;
+    height: 1px;
+  }
+}
+
+.mark {
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+  border: 1.5px solid c('gray-300');
+  background: c('white');
+  transition: 0.15s;
+}
+.radio .mark {
+  border-radius: 50%;
+}
+.radio input:checked + .mark {
+  border: 6px solid c('primary');
+}
+input:focus-visible + .mark {
+  outline: 3px solid c('primary');
+  outline-offset: 2px;
+}
+
+.checkboxMark {
+  position: relative;
+  width: 22px;
+  height: 22px;
+  border: 1.5px solid c('gray-300');
+  background: c('white');
+  border-radius: r('xs');
+  transition: 0.15s;
+
+  &::after {
+    content: '';
+    position: absolute;
+    top: 3px;
+    left: 7px;
+    width: 5px;
+    height: 10px;
+    border-right: 2.5px solid c('white');
+    border-bottom: 2.5px solid c('white');
+    opacity: 0;
+    transform: rotate(45deg);
+  }
+}
+.checkbox input:checked + .checkboxMark {
+  border-color: c('primary');
+  background: c('primary');
+
+  &::after {
+    opacity: 1;
+  }
+}
+
+// ---------- File input ----------
+.fileInput {
+  display: flex;
+  gap: sp(2);
+}
+.fileInputName {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  justify-content: space-between;
+  min-width: 0;
+  height: 52px;
+  padding: 0 sp(4);
+  border: 1px solid c('gray-300');
+  border-radius: r('md');
+  color: c('gray-500');
+  @include type('body-sm', null, 1.5);
+
+  span {
+    @include ellipsis;
+  }
+  :global(.icon) {
+    width: 16px;
+    height: 16px;
+    color: c('gray-700');
+    stroke-width: 2;
+  }
+}
+.fileInputName.hasFile {
+  color: c('ink');
+}
+.fileInputHidden {
+  @include sr-only;
+}
+
+// ---------- Form card ----------
+.formCard {
+  display: grid;
+  gap: sp(6);
+  padding: sp(8);
+  border: 1px solid c('gray-200');
+  border-radius: r('2xl');
+
+  @include down('md') {
+    padding: sp(6) sp(5);
+    border-radius: r('xl');
+  }
+}
+
+.reqNote {
+  color: c('gray-500');
+  @include type('caption');
+
+  .req {
+    font-weight: 700;
+  }
+}
+
+.petitionForm {
+  display: grid;
+  gap: sp(6);
+}
+
+.agree {
+  display: grid;
+  gap: sp(2);
+  padding: sp(4) sp(4.5);
+  border-radius: r('md');
+  background: c('primary-light');
+
+  .checkbox {
+    font-weight: 700;
+  }
+}
+
+
+// ---------- Lookup ----------
+.lookup {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr auto;
+  align-items: end;
+  gap: sp(4);
+  padding: sp(7);
+  border-radius: r('xl');
+  background: c('bg');
+
+  > button {
+    min-width: 120px;
+  }
+
+  @include down('lg') {
+    grid-template-columns: 1fr 1fr;
+
+    > button {
+      grid-column: 1 / -1;
+    }
+  }
+  @include down('md') {
+    grid-template-columns: 1fr;
+    padding: sp(5);
+  }
+}
+
+.resultHead {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: sp(3);
+}

@@ -1,0 +1,104 @@
+@use 'tokens' as *;
+@use 'mixins' as *;
+
+.tracker {
+  display: flex;
+  padding: sp(8) sp(6);
+  border: 1px solid c('gray-200');
+  border-radius: r('xl');
+
+  @include down('md') {
+    flex-direction: column;
+    gap: sp(5);
+    padding: sp(6) sp(5);
+  }
+}
+
+.step {
+  position: relative;
+  display: grid;
+  flex: 1;
+  justify-items: center;
+  gap: sp(2.5);
+  text-align: center;
+
+  &:not(:first-child)::before {
+    content: '';
+    position: absolute;
+    top: 21px;
+    right: 50%;
+    width: 100%;
+    height: 3px;
+    background: c('gray-200');
+  }
+
+  &.done::before,
+  &.current::before {
+    background: c('primary') !important;
+  }
+
+  @include down('md') {
+    grid-template-columns: 44px 1fr;
+    justify-items: start;
+    align-items: center;
+    column-gap: sp(3.5);
+    row-gap: 2px;
+    text-align: left;
+
+    &:not(:first-child)::before {
+      top: auto;
+      bottom: calc(100% - 2px);
+      right: auto;
+      left: 21px;
+      width: 3px;
+      height: 24px;
+    }
+  }
+}
+
+.dot {
+  position: relative;
+  z-index: z('base');
+  @include icon-box(44px, 50%, c('white'));
+  border: 2px solid c('gray-300');
+  color: c('gray-500');
+
+  :global(.icon) {
+    width: 20px;
+    height: 20px;
+    stroke-width: 2.4;
+  }
+
+  @include down('md') {
+    grid-row: span 2;
+  }
+}
+
+.done .dot {
+  border-color: c('primary');
+  color: c('white');
+  background: c('primary');
+}
+.current .dot {
+  border-color: c('primary');
+  color: c('primary');
+  box-shadow: 0 0 0 6px ca('primary', 0.15);
+}
+
+.step strong {
+  @include type('body-sm', bold, 1.4);
+}
+.wait strong {
+  color: c('gray-500');
+}
+.step time,
+.step small {
+  font-family: $font-num;
+  color: c('gray-500');
+  @include type('caption', null, 1.4, 0);
+}
+.current small {
+  font-family: $font-base;
+  color: c('primary');
+  font-weight: 700;
+}

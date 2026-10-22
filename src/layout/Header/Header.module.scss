@@ -1,0 +1,660 @@
+@use 'tokens' as *;
+@use 'mixins' as *;
+
+// ---------- skip-nav ----------
+.skipNav {
+  // 전역 .skip-nav(global.scss)에 레이아웃 전용 보정이 필요하면 여기 추가
+}
+
+// ---------- Utility Bar ----------
+.utilBar {
+  background: c('gray-100');
+
+  &Inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 40px;
+  }
+
+  &Official {
+    display: flex;
+    align-items: center;
+    gap: sp(2);
+    color: c('gray-700');
+    @include type('caption');
+  }
+
+  &Badge {
+    width: 16px;
+    height: 16px;
+    color: c('primary');
+  }
+
+  &Links {
+    display: flex;
+    align-items: center;
+    gap: sp(5);
+    color: c('gray-700');
+    @include type('caption');
+
+    a {
+      @include hover {
+        color: c('primary');
+        text-decoration: underline;
+      }
+    }
+  }
+
+  &En {
+    font-family: $font-num;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+  }
+
+  @include down('lg') {
+    display: none;
+  }
+}
+
+.fontSize {
+  display: flex;
+  align-items: center;
+  gap: sp(1.5);
+
+  &Btn {
+    @include icon-box(20px, 4px, c('white'));
+    border: 1px solid c('gray-300');
+
+    :global(.icon) {
+      width: 12px;
+      height: 12px;
+      stroke-width: 2;
+    }
+
+    &:disabled {
+      opacity: 0.4;
+      cursor: default;
+    }
+  }
+}
+
+// ---------- Header ----------
+.header {
+  position: sticky;
+  top: 0;
+  z-index: z('header');
+  background: c('white');
+}
+
+.headerBar {
+  position: relative;
+  border-bottom: 1px solid c('gray-200');
+  background: c('white');
+}
+
+.headerInner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: var(--header-h);
+}
+
+.headerActions {
+  display: flex;
+  align-items: center;
+  gap: sp(2);
+}
+
+.headerSearchBtn {
+  @include icon-box(44px, 50%, c('gray-100'));
+  transition: background 0.2s;
+
+  :global(.icon) {
+    width: 20px;
+    height: 20px;
+    stroke-width: 2;
+  }
+
+  &[aria-expanded='true'] {
+    color: c('white');
+    background: c('ink');
+  }
+}
+
+.headerMenuBtn {
+  display: flex;
+  align-items: center;
+  gap: sp(2);
+  height: 44px;
+  padding: 0 sp(4.5) 0 sp(4);
+  border-radius: r('pill');
+  color: c('white');
+  background: c('ink');
+  @include type('label');
+
+  :global(.icon) {
+    width: 18px;
+    height: 18px;
+    stroke-width: 2;
+  }
+}
+
+@include down('lg') {
+  .headerSearchBtn {
+    width: 40px;
+    height: 40px;
+    background: none;
+  }
+  .headerMenuBtn {
+    width: 40px;
+    height: 40px;
+    padding: 0;
+    justify-content: center;
+    color: c('ink');
+    background: none;
+
+    :global(.icon) {
+      width: 24px;
+      height: 24px;
+    }
+  }
+  .headerMenuLabel {
+    @include sr-only;
+  }
+}
+
+// ---------- Logo ----------
+.logo {
+  flex-shrink: 0;
+
+  a {
+    display: flex;
+    align-items: center;
+    gap: sp(2.5);
+  }
+}
+
+.logoMark {
+  width: 36px;
+  height: 36px;
+}
+
+.logoText {
+  display: flex;
+  flex-direction: column;
+
+  strong {
+    @include type('title-lg', null, 1.3);
+  }
+
+  span {
+    font-family: $font-num;
+    color: c('gray-500');
+    @include type('micro', medium, 1.3);
+  }
+}
+
+@include down('lg') {
+  .logoMark {
+    width: 32px;
+    height: 32px;
+  }
+  .logoText strong {
+    font-size: fs('body-lg');
+  }
+  .logoText span {
+    display: none;
+  }
+}
+
+// ---------- 통합검색 ----------
+.headerSearch {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  padding: sp(8) 0 sp(10);
+  border-top: 1px solid c('gray-200');
+  background: c('white');
+  box-shadow: shadow('panel');
+}
+
+.headerSearchInner {
+  position: relative;
+  display: flex;
+  align-items: center;
+  max-width: 800px;
+}
+
+.headerSearchInputEl {
+  width: 100%;
+  height: 64px;
+  padding: 0 sp(18) 0 sp(6);
+  border: 2px solid c('ink');
+  border-radius: r('lg');
+  @include type('title', regular, 1.5);
+
+  &::placeholder {
+    color: c('gray-500');
+  }
+  &:focus {
+    outline: none;
+    border-color: c('primary');
+  }
+}
+
+.headerSearchSubmit {
+  @include icon-box(48px, r('md'), c('primary'));
+  position: absolute;
+  right: sp(8);
+  color: c('white');
+
+  @include down('md') {
+    right: sp(7);
+  }
+
+  :global(.icon) {
+    width: 22px;
+    height: 22px;
+    stroke-width: 2.2;
+  }
+}
+
+// ============================================================
+// GNB + 메가메뉴
+// ============================================================
+$panel-h: 340px;
+$col-x: 256px;
+$col-w: 157px;
+
+.gnb {
+  position: static;
+  height: 100%;
+
+  @include down('lg') {
+    display: none;
+  }
+}
+
+.gnbList {
+  display: flex;
+  height: 100%;
+  gap: sp(13);
+
+  @include down('xl') {
+    gap: sp(9);
+  }
+}
+
+.gnbItem {
+  position: static;
+  display: flex;
+  align-items: center;
+}
+
+.gnbLink {
+  position: relative;
+  display: flex;
+  align-items: center;
+  height: 100%;
+  @include type('body-lg', medium, 1.4, -0.03em);
+  transition: color 0.2s;
+
+  &::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -1px;
+    height: 3px;
+    background: c('primary');
+    transform: scaleX(0);
+    transition: transform 0.25s $ease;
+  }
+}
+
+.gnbItem.isCurrent .gnbLink,
+.gnbItem.isHover .gnbLink {
+  color: c('primary');
+  font-weight: 700;
+
+  &::after {
+    transform: scaleX(1);
+  }
+}
+
+.gnbCol {
+  position: absolute;
+  top: 100%;
+  left: calc(50% - #{$container * 0.5} + #{$col-x} + var(--i) * #{$col-w});
+  z-index: z('raised');
+  width: $col-w;
+  height: $panel-h;
+  padding: sp(7) sp(3.5);
+  visibility: hidden;
+  opacity: 0;
+  transition: opacity 0.2s, visibility 0.2s;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: sp(7);
+    bottom: sp(7);
+    left: 0;
+    width: 1px;
+    background: c('gray-200');
+  }
+}
+// 메뉴가 열리면 6개 컬럼이 모두 보인다 (가리킨 컬럼은 아래 .isHover 에서 배경 강조)
+.header.isGnbOpen .gnbCol {
+  visibility: visible;
+  opacity: 1;
+}
+.gnbItem:first-child .gnbCol::before {
+  display: none;
+}
+.gnbItem.isHover .gnbCol {
+  visibility: visible;
+  opacity: 1;
+  background: c('bg');
+
+  &::before {
+    display: none;
+  }
+}
+
+.gnbColTitle {
+  display: block;
+  padding: 0 sp(2.5) sp(3);
+  @include type('body', bold, 1.4);
+}
+.gnbItem.isHover .gnbColTitle {
+  color: c('primary');
+}
+
+.gnbSub a {
+  display: block;
+  padding: sp(2) sp(2.5);
+  border-radius: r('sm');
+  color: c('gray-700');
+  @include type('label', null, 1.4);
+
+  @include hover {
+    color: c('primary');
+    background: c('white');
+  }
+
+  &.isCurrent {
+    color: c('primary');
+    font-weight: 700;
+    background: c('white');
+  }
+}
+
+.gnbPanel {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  z-index: z('base');
+  width: 100%;
+  height: $panel-h;
+  border-top: 1px solid c('gray-200');
+  background: c('white');
+  box-shadow: shadow('panel');
+  visibility: hidden;
+  opacity: 0;
+  transition: opacity 0.2s, visibility 0.2s;
+}
+
+.gnbIntro {
+  width: 220px;
+  margin-left: calc(50% - #{$container * 0.5});
+  padding-top: sp(8);
+
+  strong {
+    display: block;
+    margin-bottom: sp(3);
+    @include type('h6');
+  }
+
+  p {
+    color: c('gray-500');
+    @include type('label', regular, 1.6);
+  }
+}
+
+.header.isGnbOpen .gnbPanel {
+  visibility: visible;
+  opacity: 1;
+}
+
+.gnbDim {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background: ca('dim', 0.55);
+  visibility: hidden;
+  opacity: 0;
+  transition: opacity 0.25s, visibility 0.25s;
+}
+.header.isGnbOpen .gnbDim {
+  visibility: visible;
+  opacity: 1;
+}
+
+@media (min-width: 1024px) and (max-width: 1279.98px) {
+  .gnbCol {
+    left: calc(#{$gutter-pc} + 220px + var(--i) * ((100% - #{$gutter-pc * 2} - 220px) / 6));
+    width: calc((100% - #{$gutter-pc * 2} - 220px) / 6);
+  }
+  .gnbIntro {
+    margin-left: $gutter-pc;
+    width: 200px;
+  }
+}
+
+// ============================================================
+// 전체메뉴
+// ============================================================
+.allmenu {
+  position: fixed;
+  inset: 0;
+  z-index: z('modal');
+  background: ca('dim', 0.55);
+  animation: fadeIn 0.2s $ease;
+}
+
+.allmenuInner {
+  max-width: $container + $gutter-pc * 2;
+  margin: sp(10) auto 0;
+  padding: sp(10) sp(12) sp(14);
+  border-radius: r('3xl');
+  background: c('white');
+  box-shadow: shadow('md');
+  animation: slideDown 0.3s $ease;
+}
+
+.allmenuHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: sp(6);
+  margin-bottom: sp(8);
+  border-bottom: 2px solid c('ink');
+}
+
+.allmenuHeading {
+  @include type('h4', null, 1.35);
+}
+
+.allmenuMoUtil {
+  display: none;
+}
+
+.allmenuClose {
+  @include icon-box(48px, 50%, c('gray-100'));
+
+  :global(.icon) {
+    width: 24px;
+    height: 24px;
+    stroke-width: 2;
+  }
+}
+
+.allmenuList {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: sp(8) sp(6);
+}
+
+.allmenuTitle {
+  display: block;
+  margin-bottom: sp(3.5);
+  padding-bottom: sp(3.5);
+  border-bottom: 1px solid c('gray-200');
+  @include type('title', null, 1.4, -0.03em);
+}
+
+.allmenuToggle {
+  display: none;
+}
+
+.allmenuSub {
+  display: grid;
+  gap: sp(1);
+
+  a {
+    display: block;
+    padding: sp(1.5) 0;
+    color: c('gray-700');
+    @include type('body-sm', medium, 1.45);
+
+    @include hover {
+      color: c('primary');
+      text-decoration: underline;
+    }
+
+    &.isCurrent {
+      color: c('primary');
+      font-weight: 700;
+    }
+  }
+}
+
+@include down('lg') {
+  .allmenu {
+    background: ca('dim', 0.55);
+  }
+
+  .allmenuInner {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: min(100%, 400px);
+    margin: 0;
+    padding: 0;
+    border-radius: 0;
+    overflow-y: auto;
+    animation: slideLeft 0.3s $ease;
+  }
+
+  .allmenuHead {
+    position: sticky;
+    top: 0;
+    z-index: z('base');
+    flex-wrap: wrap;
+    gap: sp(3);
+    margin: 0;
+    padding: sp(4) sp(5);
+    border-bottom: 1px solid c('gray-200');
+    background: c('white');
+  }
+
+  .allmenuHeading {
+    font-size: fs('title-lg');
+  }
+
+  .allmenuMoUtil {
+    display: flex;
+    gap: sp(4);
+    order: 3;
+    width: 100%;
+    color: c('gray-700');
+    @include type('caption', medium);
+  }
+
+  .allmenuClose {
+    width: 40px;
+    height: 40px;
+  }
+
+  .allmenuList {
+    display: block;
+  }
+
+  .allmenuItem {
+    border-bottom: 1px solid c('gray-200');
+  }
+
+  .allmenuTitle {
+    display: none;
+  }
+
+  .allmenuToggle {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: sp(4.5) sp(5);
+    text-align: left;
+    @include type('body-lg', bold, 1.4, -0.03em);
+
+    :global(.icon) {
+      width: 20px;
+      height: 20px;
+      color: c('gray-500');
+      transition: transform 0.25s;
+    }
+
+    &[aria-expanded='true'] {
+      color: c('primary');
+
+      :global(.icon) {
+        color: c('primary');
+        transform: rotate(180deg);
+      }
+    }
+  }
+
+  .allmenuSub {
+    padding: sp(2) sp(5) sp(4);
+    background: c('bg');
+    display: grid;
+  }
+  // 모바일 아코디언: 펼친 메뉴만 하위 항목을 보여 준다
+  .allmenuItem:not(.isOpen) .allmenuSub {
+    display: none;
+  }
+  .allmenuSub a {
+    padding: sp(2.5) sp(3);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+}
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-16px);
+  }
+}
+@keyframes slideLeft {
+  from {
+    transform: translateX(100%);
+  }
+}

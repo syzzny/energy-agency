@@ -1,0 +1,22 @@
+@use 'tokens' as *;
+@use 'mixins' as *;
+
+.sectionBlock {
+  display: grid;
+  gap: sp(5);
+  scroll-margin-top: calc(var(--header-h) + 72px);
+}
+
+.contentText {
+  color: c('gray-700');
+  @include type('body', null, 1.75);
+
+  @include down('md') {
+    font-size: fs('body-sm');
+  }
+}
+
+.introGroup {
+  display: grid;
+  gap: sp(4);
+}

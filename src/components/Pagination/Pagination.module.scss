@@ -1,0 +1,57 @@
+@use 'tokens' as *;
+@use 'mixins' as *;
+
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: sp(1.5);
+  padding-top: sp(4);
+
+  a,
+  strong {
+    @include icon-box(40px, 50%);
+    font-family: $font-num;
+    color: c('gray-700');
+    @include type('body-sm', medium, 1, 0);
+  }
+
+  a {
+    @include hover {
+      background: c('gray-100');
+    }
+  }
+
+  strong {
+    color: c('white');
+    background: c('primary');
+    font-weight: 700;
+  }
+
+  @include down('md') {
+    gap: 2px;
+
+    a,
+    strong {
+      width: 34px;
+      height: 34px;
+    }
+  }
+}
+
+.arrow {
+  border: 1px solid c('gray-200');
+
+  :global(.icon) {
+    width: 16px;
+    height: 16px;
+    stroke-width: 2;
+  }
+}
+
+// `.pagination a { display: flex }` 보다 우선하도록 부모 클래스를 함께 쓴다
+.pagination .isFar {
+  @include down('md') {
+    display: none;
+  }
+}

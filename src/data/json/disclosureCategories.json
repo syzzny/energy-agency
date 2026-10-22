@@ -1,0 +1,32 @@
+[
+  {
+    "key": "all",
+    "label": "전체",
+    "count": 52
+  },
+  {
+    "key": "ops",
+    "label": "기관운영",
+    "count": 14
+  },
+  {
+    "key": "budget",
+    "label": "사업·예산",
+    "count": 12
+  },
+  {
+    "key": "contract",
+    "label": "계약",
+    "count": 8
+  },
+  {
+    "key": "hr",
+    "label": "인사·조직",
+    "count": 10
+  },
+  {
+    "key": "stat",
+    "label": "통계",
+    "count": 8
+  }
+]

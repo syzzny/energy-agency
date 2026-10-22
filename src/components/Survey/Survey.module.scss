@@ -1,0 +1,91 @@
+@use 'tokens' as *;
+@use 'mixins' as *;
+
+.survey {
+  // 본문 블록 사이 간격 변수(--content-gap)를 스스로 키워 위 콘텐츠와 넉넉히 떨어뜨린다
+  --content-gap: #{sp(14)};
+  padding: sp(6) sp(7);
+  border-radius: r('xl');
+  background: c('bg');
+
+  @include down('md') {
+    padding: sp(5);
+  }
+}
+
+.head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: sp(2) sp(4);
+  margin-bottom: sp(4);
+}
+
+.title {
+  @include type('body', bold, 1.5);
+}
+
+.manager {
+  color: c('gray-500');
+  @include type('caption');
+
+  span + span {
+    margin-left: sp(1.5);
+  }
+}
+
+.options {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: sp(2);
+}
+
+.option {
+  position: relative;
+  cursor: pointer;
+
+  input {
+    position: absolute;
+    opacity: 0;
+  }
+
+  span {
+    display: inline-flex;
+    align-items: center;
+    gap: sp(1.5);
+    height: 36px;
+    padding: 0 sp(3.5) 0 sp(2.5);
+    border: 1px solid c('gray-200');
+    border-radius: r('pill');
+    color: c('gray-700');
+    background: c('white');
+    @include type('label', null, 1.4);
+
+    &::before {
+      content: '';
+      width: 16px;
+      height: 16px;
+      border: 1.5px solid c('gray-300');
+      border-radius: 50%;
+      box-sizing: border-box;
+      transition: border 0.15s;
+    }
+  }
+
+  input:checked + span {
+    border-color: c('primary');
+    color: c('primary');
+    font-weight: 700;
+
+    &::before {
+      border: 5px solid c('primary');
+    }
+  }
+
+  input:focus-visible + span {
+    outline: 3px solid c('primary');
+    outline-offset: 2px;
+  }
+}

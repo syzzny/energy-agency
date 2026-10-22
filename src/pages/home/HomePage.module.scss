@@ -1,0 +1,1146 @@
+@use 'tokens' as *;
+@use 'mixins' as *;
+
+.main {
+  overflow-x: clip;
+}
+
+.sectionHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: sp(4);
+  margin-bottom: sp(6);
+}
+.sectionHeadTitle {
+  @include type('h4', null, 1.35);
+}
+@include down('md') {
+  .sectionHeadTitle {
+    font-size: fs('h6');
+  }
+}
+
+// ============================================================
+// Hero
+// ============================================================
+.hero {
+  padding-top: sp(8);
+}
+.heroInner {
+  display: grid;
+  grid-template-columns: 1fr 384px;
+  gap: sp(6);
+}
+.heroVisual {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: sp(10);
+  min-height: 536px;
+  padding: sp(13) sp(14) sp(12);
+  overflow: hidden;
+  border-radius: r('3xl');
+  color: c('white');
+  background: c('navy');
+  isolation: isolate;
+
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: linear-gradient(90deg, ca('overlay', 0.88) 0%, ca('overlay', 0.6) 42%, ca('overlay', 0.05) 78%),
+      linear-gradient(0deg, ca('overlay', 0.55) 0%, ca('overlay', 0) 45%);
+  }
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: sp(-40);
+    left: sp(-30);
+    z-index: -1;
+    width: 420px;
+    height: 420px;
+    border-radius: 50%;
+    background: radial-gradient(circle, ca('primary', 0.55), transparent 70%);
+    pointer-events: none;
+  }
+}
+.heroBgs {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+}
+.heroBg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  transform: scale(1.08);
+  transition: opacity 1s $ease, transform 7s linear;
+}
+.heroBg.active {
+  opacity: 1;
+  transform: scale(1);
+}
+.heroSlides {
+  position: relative;
+  display: grid;
+}
+.heroSlide {
+  grid-area: 1 / 1;
+  visibility: hidden;
+  opacity: 0;
+  transform: translateY(12px);
+  transition: opacity 0.6s $ease, transform 0.6s $ease, visibility 0.6s;
+}
+.heroSlide.active {
+  visibility: visible;
+  opacity: 1;
+  transform: none;
+}
+.heroChip {
+  display: inline-flex;
+  align-items: center;
+  gap: sp(1.5);
+  height: 30px;
+  padding: 0 sp(3.5) 0 sp(3);
+  border-radius: r('pill');
+  background: ca('white', 0.16);
+  @include type('caption', medium, 1.4);
+
+  &::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: c('mint');
+  }
+}
+.heroTitle {
+  margin-top: sp(5);
+  @include type('display');
+}
+.heroDesc {
+  margin-top: sp(5);
+  color: ca('white', 0.82);
+  @include type('body-lg');
+}
+.heroControl {
+  position: absolute;
+  top: sp(12);
+  right: sp(14);
+  z-index: z('raised');
+  display: flex;
+  align-items: center;
+  gap: sp(3);
+  height: 36px;
+  padding: 0 sp(1.5) 0 sp(4);
+  border-radius: r('pill');
+  background: ca('white', 0.14);
+  font-family: $font-num;
+  @include type('caption', semibold, 1, 0);
+
+  .total {
+    opacity: 0.6;
+  }
+}
+.heroProgress {
+  position: relative;
+  width: 56px;
+  height: 2px;
+  background: ca('white', 0.3);
+
+  span {
+    position: absolute;
+    inset: 0;
+    background: c('white');
+    transform-origin: left;
+    transform: scaleX(0);
+  }
+
+  span.running {
+    animation: growBar var(--interval, 6000ms) linear forwards;
+  }
+}
+
+@keyframes growBar {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+.heroToggle {
+  @include icon-box(28px, 50%);
+  color: c('white');
+
+  :global(.icon) {
+    width: 16px;
+    height: 16px;
+    stroke-width: 2.2;
+  }
+}
+.heroSearch {
+  position: relative;
+  z-index: z('base');
+  max-width: 452px;
+
+  @include down('xl') {
+    max-width: none;
+  }
+}
+.heroForm {
+  display: flex;
+  align-items: center;
+  max-width: 520px;
+  height: 68px;
+  padding: sp(2) sp(2) sp(2) sp(6);
+  border-radius: r('xl');
+  background: c('white');
+  box-shadow: shadow('md');
+
+  input {
+    flex: 1;
+    min-width: 0;
+    height: 100%;
+    border: 0;
+    color: c('ink');
+    background: none;
+    @include type('body-lg', null, 1.5);
+
+    &::placeholder {
+      color: c('gray-500');
+    }
+    &:focus {
+      outline: none;
+    }
+  }
+
+  &:focus-within {
+    outline: 3px solid c('mint');
+    outline-offset: 3px;
+  }
+
+  button {
+    @include icon-box(52px, 14px, c('primary'));
+    color: c('white');
+
+    :global(.icon) {
+      width: 22px;
+      height: 22px;
+      stroke-width: 2.2;
+    }
+  }
+}
+.heroKeywords {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: sp(2);
+  margin-top: sp(3.5);
+
+  dt {
+    margin-right: sp(1);
+    color: ca('white', 0.7);
+    @include type('caption', medium);
+  }
+
+  a {
+    display: inline-flex;
+    height: 30px;
+    align-items: center;
+    padding: 0 sp(3);
+    border: 1px solid ca('white', 0.35);
+    border-radius: r('pill');
+    @include type('caption', null, 1.4);
+    transition: background 0.2s;
+
+    @include hover {
+      background: ca('white', 0.12);
+    }
+  }
+}
+.heroSide {
+  display: flex;
+  flex-direction: column;
+  gap: sp(4);
+}
+
+@include down('xl') {
+  .heroInner {
+    grid-template-columns: 1fr 340px;
+  }
+  .heroTitle {
+    font-size: fs('h1');
+  }
+}
+@include down('lg') {
+  .hero {
+    padding-top: sp(5);
+  }
+  .heroInner {
+    grid-template-columns: 1fr;
+  }
+  .heroVisual {
+    min-height: 480px;
+  }
+  .heroSide {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+}
+@include down('md') {
+  .heroVisual {
+    min-height: 0;
+    padding: sp(18) sp(6) sp(7);
+    border-radius: r('2xl');
+
+    &::before {
+      background: linear-gradient(0deg, ca('overlay', 0.92) 0%, ca('overlay', 0.55) 55%, ca('overlay', 0.35) 100%);
+    }
+  }
+  .heroControl {
+    top: sp(5);
+    right: auto;
+    left: sp(6);
+  }
+  .heroTitle {
+    font-size: fs('h4');
+  }
+  .heroDesc {
+    font-size: fs('body-sm');
+
+    br {
+      display: none;
+    }
+  }
+  .heroForm {
+    height: 60px;
+
+    input {
+      font-size: fs('body-sm');
+    }
+    button {
+      width: 44px;
+      height: 44px;
+    }
+  }
+  .heroKeywords dt {
+    width: 100%;
+  }
+  .heroSide {
+    grid-template-columns: 1fr;
+  }
+}
+
+// ----- 알림판 -----
+.boardCard {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: sp(6);
+  padding: sp(8);
+  border-radius: r('3xl');
+  color: c('white');
+  background: c('navy');
+}
+.boardCardHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.boardCardLabel {
+  color: c('mint');
+  @include type('body-sm', bold, 1.5);
+}
+.boardCardPager {
+  display: flex;
+  align-items: center;
+  gap: sp(1.5);
+  font-family: $font-num;
+  color: ca('white', 0.8);
+  @include type('caption', medium, 1, 0);
+}
+.boardCardBadges {
+  display: flex;
+  gap: sp(1.5);
+  margin-bottom: sp(3.5);
+}
+.boardCardTitle {
+  @include type('h6', null, 1.42);
+
+  a {
+    @include hover {
+      text-decoration: underline;
+      text-underline-offset: 4px;
+    }
+  }
+}
+.boardCardPeriod {
+  margin-top: sp(3.5);
+  color: ca('white', 0.65);
+  @include type('label', regular);
+}
+.boardCardCta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 56px;
+  padding: 0 sp(5);
+  border-radius: r('lg');
+  background: ca('white', 0.08);
+  @include type('body-sm', medium, 1.5);
+  transition: background 0.2s;
+
+  :global(.icon) {
+    width: 18px;
+    height: 18px;
+    stroke-width: 2;
+  }
+
+  @include hover {
+    background: ca('white', 0.14);
+  }
+}
+@include down('md') {
+  .boardCard {
+    padding: sp(6);
+    border-radius: r('2xl');
+  }
+  .boardCardTitle {
+    font-size: fs('title-lg');
+  }
+}
+
+// ----- 고객센터 -----
+.contactCard {
+  display: flex;
+  align-items: center;
+  gap: sp(4);
+  padding: sp(6) sp(7);
+  border-radius: r('2xl');
+  background: c('bg');
+}
+.contactCardIcon {
+  @include icon-box(48px, r('lg'), c('white'));
+  color: c('primary');
+
+  :global(.icon) {
+    width: 22px;
+    height: 22px;
+  }
+}
+.contactCardLabel {
+  color: c('gray-500');
+  @include type('caption', medium);
+}
+.contactCardTel {
+  display: block;
+  font-family: $font-num;
+  @include type('h5', null, 1.3, -0.01em);
+}
+.contactCardTime {
+  color: c('gray-500');
+  @include type('tiny', regular, 1.5);
+}
+
+// ============================================================
+// 자주 찾는 서비스
+// ============================================================
+.quick {
+  padding: sp(16) 0 sp(6);
+}
+.quickList {
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  grid-auto-rows: 1fr;
+  gap: sp(4);
+
+  > li {
+    display: flex;
+  }
+}
+.quickLink {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: sp(3.5);
+  padding: sp(7) sp(2) sp(6.5);
+  border-radius: r('xl');
+  background: c('bg');
+  text-align: center;
+  overflow-wrap: normal;
+  @include type('body-sm', medium, 1.4);
+  transition: transform 0.25s $ease, background 0.25s;
+
+  @include hover {
+    background: c('primary-light');
+    transform: translateY(-4px);
+
+    .quickIcon {
+      color: c('white');
+      background: c('primary');
+    }
+  }
+}
+.quickIcon {
+  @include icon-box(56px, 18px, c('white'));
+  color: c('primary');
+  box-shadow: shadow('sm');
+  transition: 0.25s;
+
+  :global(.icon) {
+    width: 26px;
+    height: 26px;
+  }
+}
+@include down('lg') {
+  .quickList {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+@include down('md') {
+  .quick {
+    padding-top: sp(12);
+  }
+  .quickList {
+    gap: sp(2);
+  }
+  .quickLink {
+    gap: sp(2.5);
+    padding: sp(4.5) sp(1);
+    border-radius: r('lg');
+    font-size: fs('caption');
+  }
+  .quickIcon {
+    width: 44px;
+    height: 44px;
+    border-radius: 14px;
+
+    :global(.icon) {
+      width: 22px;
+      height: 22px;
+    }
+  }
+}
+@include down('sm') {
+  .quickList {
+    gap: sp(1.5);
+  }
+  .quickLink {
+    padding: sp(4) sp(1.5);
+    font-size: fs('tiny');
+    letter-spacing: -0.04em;
+  }
+}
+
+// ============================================================
+// 알림·소식 + 카드뉴스
+// ============================================================
+.news {
+  padding: sp(14) 0 sp(22);
+}
+.newsInner {
+  display: grid;
+  grid-template-columns: 1fr 384px;
+  gap: sp(12);
+
+  > * {
+    min-width: 0;
+  }
+}
+.newsHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: sp(4);
+  margin-bottom: sp(5);
+}
+.newsHeadLeft {
+  display: flex;
+  align-items: center;
+  gap: sp(7);
+}
+.newsTabs {
+  display: flex;
+  gap: sp(1.5);
+}
+.newsPanel {
+  border-top: 2px solid c('ink');
+}
+.newsRow {
+  display: flex;
+  align-items: center;
+  gap: sp(4);
+  padding: sp(5) sp(1);
+  border-bottom: 1px solid c('gray-200');
+
+  @include hover {
+    .newsTitle {
+      text-decoration: underline;
+    }
+  }
+}
+.newsTitle {
+  flex: 1;
+  min-width: 0;
+  @include ellipsis;
+  @include type('body', medium, 1.5);
+}
+.newsDate {
+  flex-shrink: 0;
+  font-family: $font-num;
+  color: c('gray-500');
+  @include type('label', regular, null, 0);
+}
+.newsCardPager {
+  display: flex;
+  gap: sp(1.5);
+}
+.newsCardHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: sp(5);
+}
+@include down('lg') {
+  .newsInner {
+    grid-template-columns: 1fr;
+  }
+}
+@include down('md') {
+  .news {
+    padding: sp(10) 0 sp(16);
+  }
+  .newsHead {
+    flex-wrap: wrap;
+    position: relative;
+
+    // 더보기(+) 버튼은 제목 줄 오른쪽 끝에 고정
+    > a:last-child {
+      position: absolute;
+      top: 0;
+      right: 0;
+    }
+  }
+  .newsHeadLeft {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: sp(4);
+    width: 100%;
+  }
+  .newsTabs {
+    width: calc(100% + #{$gutter-mo * 2});
+    margin-inline: -$gutter-mo;
+    padding-inline: $gutter-mo;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .newsRow {
+    flex-wrap: wrap;
+    gap: sp(1.5) sp(2.5);
+    padding: sp(4) 0;
+  }
+  .newsTitle {
+    flex-basis: calc(100% - 56px);
+    white-space: normal;
+    @include ellipsis(2);
+    font-size: fs('body-sm');
+  }
+  .newsDate {
+    order: 3;
+    font-size: fs('caption');
+  }
+  .newsNew {
+    order: 4;
+  }
+}
+
+.cardNewsSection {
+  display: flex;
+  flex-direction: column;
+}
+
+.cardNewsLink {
+  display: block;
+  border-radius: 4.5%;
+
+  > span:first-child > * {
+    transition: transform 0.3s $ease;
+  }
+
+  @include hover {
+    > span:first-child > * {
+      transform: translateY(-3px);
+    }
+  }
+
+  &:focus-visible {
+    outline: 3px solid c('primary');
+    outline-offset: 3px;
+  }
+}
+
+// ============================================================
+// 숫자로 보는 성과
+// ============================================================
+.stats {
+  padding: sp(24) 0;
+  background: c('bg');
+}
+.statsInner {
+  display: grid;
+  grid-template-columns: 380px 1fr;
+  gap: sp(16);
+}
+.statsCopy {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: sp(5);
+}
+.statsTitle {
+  @include type('h3');
+}
+.statsDesc {
+  color: c('gray-700');
+  @include type('body');
+}
+.statsNote {
+  color: c('gray-500');
+  @include type('caption');
+}
+.statsGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: sp(4);
+}
+.statsImg {
+  width: 200px;
+  height: 200px;
+  margin: sp(2) 0 sp(-10) sp(-4);
+  animation: float 7s ease-in-out infinite;
+  mix-blend-mode: multiply;
+}
+@include down('lg') {
+  .stats {
+    padding: sp(18) 0;
+  }
+  .statsInner {
+    grid-template-columns: 1fr;
+    gap: sp(10);
+  }
+  .statsImg {
+    position: absolute;
+    top: sp(-6);
+    right: 0;
+    width: 140px;
+    height: 140px;
+    margin: 0;
+  }
+}
+@include down('md') {
+  .stats {
+    padding: sp(14) 0;
+  }
+  .statsTitle {
+    font-size: fs('h5');
+  }
+  .statsGrid {
+    grid-template-columns: 1fr;
+    gap: sp(3);
+  }
+  .statsImg {
+    width: 110px;
+    height: 110px;
+  }
+}
+
+.statCard {
+  display: flex;
+  flex-direction: column;
+  gap: sp(5);
+  padding: sp(7);
+  border: 1px solid c('gray-200');
+  border-radius: r('2xl');
+  background: c('white');
+}
+.statCardHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  @include type('body', bold, 1.5);
+}
+.statCardIcon {
+  @include icon-box(40px, 12px, c('primary-light'));
+  color: c('primary');
+
+  :global(.icon) {
+    width: 20px;
+    height: 20px;
+  }
+}
+.statCardValue {
+  display: flex;
+  align-items: baseline;
+  gap: sp(1.5);
+
+  strong {
+    font-family: $font-num;
+    @include type('display', semibold, 1.1, -0.03em);
+  }
+  span {
+    color: c('gray-700');
+    @include type('title', null, 1.5);
+  }
+}
+.statCardDesc {
+  color: c('gray-500');
+  @include type('label', regular, 1.6);
+}
+.statCard.highlight {
+  border-color: transparent;
+  color: c('white');
+  background: c('primary');
+
+  .statCardIcon {
+    color: c('white');
+    background: ca('white', 0.15);
+  }
+  .statCardValue span,
+  .statCardDesc {
+    color: ca('white', 0.85);
+  }
+}
+@include down('md') {
+  .statCard {
+    gap: sp(3);
+    padding: sp(6);
+  }
+  .statCardValue strong {
+    font-size: fs('h2');
+  }
+}
+
+// ============================================================
+// 주요사업
+// ============================================================
+.biz {
+  padding: sp(24) 0;
+}
+.bizHead {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: sp(4);
+  margin-bottom: sp(10);
+}
+.bizTitle {
+  margin-top: sp(3);
+  @include type('h3');
+}
+.bizList {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: sp(6);
+}
+@include down('lg') {
+  .bizList {
+    grid-template-columns: 1fr;
+    gap: sp(3);
+  }
+}
+@include down('md') {
+  .biz {
+    padding: sp(16) 0;
+  }
+  .bizHead {
+    flex-direction: column;
+    align-items: flex-start;
+    margin-bottom: sp(7);
+  }
+  .bizTitle {
+    font-size: fs('h5');
+  }
+}
+
+.bizCard {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 320px;
+  padding: sp(8) sp(8) sp(7);
+  overflow: hidden;
+  border: 1px solid c('gray-200');
+  border-radius: r('2xl');
+  transition: border-color 0.25s, box-shadow 0.25s, transform 0.25s $ease;
+
+  @include hover {
+    border-color: c('primary');
+    box-shadow: shadow('sm');
+    transform: translateY(-4px);
+
+    .bizCardGo {
+      color: c('white');
+      background: c('primary');
+    }
+  }
+  &:focus-within {
+    outline: 3px solid c('primary');
+    outline-offset: 3px;
+  }
+}
+.bizCardVisual {
+  display: flex;
+  justify-content: center;
+  height: 176px;
+  margin-bottom: sp(1);
+  padding: sp(3) 0;
+  border-radius: r('lg');
+  background: gradient('tint');
+}
+.bizCardImg {
+  width: auto;
+  height: 100%;
+  transition: transform 0.4s $ease;
+  mix-blend-mode: multiply;
+}
+.bizCard:hover .bizCardImg {
+  transform: translateY(-4px);
+}
+.bizCardTag {
+  display: block;
+  margin-top: sp(5);
+  color: c('primary');
+  @include type('caption', bold);
+}
+.bizCardTitle {
+  position: relative;
+  margin-top: sp(2.5);
+  @include type('h6');
+
+  a::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+  }
+  a:focus-visible {
+    outline: none;
+  }
+}
+.bizCardDesc {
+  margin-top: sp(2.5);
+  color: c('gray-500');
+  @include type('body-sm');
+}
+.bizCardFoot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: sp(6);
+  padding-top: sp(4);
+  border-top: 1px solid c('gray-200');
+  color: c('gray-700');
+  @include type('label');
+}
+.bizCardGo {
+  @include icon-box(32px, 50%, c('gray-100'));
+  transition: 0.25s;
+
+  :global(.icon) {
+    width: 16px;
+    height: 16px;
+    stroke-width: 2;
+  }
+}
+@include down('lg') {
+  .bizCard {
+    min-height: 0;
+  }
+}
+@include down('md') {
+  .bizCard {
+    min-height: 0;
+    padding: sp(6);
+  }
+  .bizCardVisual {
+    height: 140px;
+  }
+}
+
+// ============================================================
+// 관련 사이트 배너
+// ============================================================
+.related {
+  border-block: 1px solid c('gray-200');
+}
+.relatedInner {
+  display: flex;
+  align-items: center;
+  gap: sp(8);
+  padding-block: sp(6);
+}
+.relatedHead {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  gap: sp(3);
+}
+.relatedTitle {
+  @include type('body', bold, 1.5);
+}
+.relatedControls {
+  display: flex;
+  gap: sp(1);
+}
+.relatedViewport {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+}
+.relatedTrack {
+  display: flex;
+  gap: sp(3);
+  transition: transform 0.5s $ease;
+}
+.relatedItem {
+  flex: 0 0 calc((100% - 48px) / 5);
+
+  a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: sp(2);
+    height: 52px;
+    padding: 0 sp(3);
+    border-radius: r('md');
+    color: c('gray-700');
+    background: c('bg');
+    white-space: nowrap;
+    @include type('caption', medium, 1.4);
+
+    &::before {
+      content: '';
+      flex-shrink: 0;
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: c('gray-300');
+    }
+
+    @include hover {
+      color: c('primary');
+      text-decoration: underline;
+    }
+  }
+}
+@include down('lg') {
+  .relatedItem {
+    flex-basis: calc((100% - 24px) / 3);
+  }
+}
+@include down('md') {
+  .relatedInner {
+    flex-direction: column;
+    align-items: stretch;
+    gap: sp(4);
+  }
+  .relatedHead {
+    justify-content: space-between;
+  }
+  .relatedItem {
+    flex-basis: calc((100% - 12px) / 2);
+  }
+}
+
+// ============================================================
+// 글래스 카드
+// ============================================================
+.liveCard {
+  position: absolute;
+  right: sp(8);
+  bottom: sp(8);
+  z-index: z('base');
+  width: 204px;
+  padding: sp(4.5) sp(5);
+  border: 1px solid ca('white', 0.28);
+  border-radius: r('xl');
+  background: ca('white', 0.14);
+  box-shadow: shadow('glass');
+  -webkit-backdrop-filter: blur(16px) saturate(140%);
+  backdrop-filter: blur(16px) saturate(140%);
+  animation: float 6s ease-in-out infinite;
+}
+.liveCardHead {
+  display: flex;
+  align-items: center;
+  gap: sp(1.5);
+  color: ca('white', 0.85);
+  @include type('tiny', semibold);
+}
+.liveCardDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: c('mint');
+  box-shadow: 0 0 0 0 ca('mint', 0.6);
+  animation: pulse 1.8s infinite;
+}
+.liveCardValue {
+  display: flex;
+  align-items: baseline;
+  gap: sp(1);
+  margin-top: sp(1.5);
+
+  strong {
+    @include type('h4', null, 1.1, -0.02em);
+  }
+  span {
+    color: ca('white', 0.75);
+    @include type('caption', semibold);
+  }
+}
+.liveCardChart {
+  width: 100%;
+  height: 44px;
+  margin-top: sp(2);
+}
+.liveCardMeta {
+  margin-top: sp(1.5);
+  color: ca('white', 0.75);
+  @include type('tiny', null, 1.5);
+
+  em {
+    font-style: normal;
+    color: c('mint');
+    font-weight: 700;
+  }
+}
+@include down('xl') {
+  .liveCard {
+    display: none;
+  }
+}
+
+@keyframes float {
+  50% {
+    transform: translateY(-8px);
+  }
+}
+@keyframes pulse {
+  70% {
+    box-shadow: 0 0 0 8px ca('mint', 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 ca('mint', 0);
+  }
+}
