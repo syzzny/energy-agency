@@ -1,152 +1,153 @@
 # 에너지전환진흥원 누리집
 
-가상의 공공기관 **「에너지전환진흥원」** 누리집입니다. 원래 Handlebars 멀티페이지(Vite) + 바닐라 JS로 퍼블리싱되어 있던 것을
-**React + TypeScript + React Router(SPA) + CSS Modules** 구조로 전면 전환했습니다.
-공공기관 누리집 실무 기준(웹 접근성 · 시맨틱 마크업 · 반응형)은 그대로 유지합니다.
+가상의 공공기관 **「에너지전환진흥원」** 누리집입니다. Figma 디자인부터 퍼블리싱, React 전환, 백엔드(Supabase) 연동, 성능 개선까지 혼자 진행했습니다.
 
-- 스택: React 18, TypeScript, React Router v6(`createBrowserRouter`), Vite, Sass(CSS Modules)
-- 대응: PC 1440 기준 / 태블릿 1024 / 모바일 360~768
+- **사이트**: https://energy-agency.vercel.app
+- **스택**: React 18 · TypeScript · React Router v6 · TanStack Query · Supabase(PostgreSQL · Auth · REST) · ECharts · Sass(CSS Modules) · Vite · Vitest · Vercel
 
-## 실행
+| 한눈에 보기 | |
+|---|---|
+| 서버 연동 | 묻고 답하기 · 통계 · 회원 기능을 Supabase REST API 로 연결, 로딩 · 오류 · 빈 화면을 모두 처리 |
+| 데이터 시각화 | 연도 · 지역 필터로 바뀌는 에너지 통계 대시보드 (ECharts), 모든 차트에 표 보기 제공 |
+| 회원 기능 | 회원가입 · 이메일 인증 · 로그인 유지 · 내 질문, 비공개 글은 DB 규칙(RLS)으로 작성자 본인만 조회 |
+| 성능 | Lighthouse 모바일 성능 **78 → 92**, 첫 방문 JS **187KB → 106KB**(gzip), 기본 스레드 작업 **5.5초 → 3.5초** |
+| 품질 | 웹 접근성(KWCAG 2.2) 기준 적용, 단위 · 컴포넌트 테스트 30개, PR 마다 자동 검사(GitHub Actions) |
+
+---
+
+## 1. 주요 기능
+
+### 묻고 답하기 — REST API 연동 (`/support/qna`)
+- 목록 · 검색 · 페이지네이션 · 상세 · 질문 등록을 Supabase REST(PostgREST)로 처리합니다.
+- **TanStack Query** 로 서버 데이터를 캐시합니다. 30초 안에 같은 목록을 다시 열면 요청 없이 바로 보이고, 다음 페이지를 불러오는 동안 이전 목록을 유지해 화면이 깜빡이지 않습니다.
+- 검색어는 입력을 멈추고 0.4초 뒤에 요청하고(디바운스), 페이지를 벗어나면 진행 중인 요청을 취소합니다(AbortSignal).
+- 검색 조건 · 페이지를 주소(`?page=2&q=바우처`)에 남겨 새로고침 · 뒤로가기 · 링크 공유에도 같은 화면이 나옵니다.
+- 상태별 화면: 불러오는 중(표 모양 스켈레톤 + `aria-busy`), 오류(원인별 안내 + 다시 시도), 결과 없음(검색어 안내), 등록 중(버튼 잠금으로 중복 등록 방지).
+- 입력 검사 규칙을 DB 의 check 제약과 똑같이 맞춰, 서버에 보내기 전에 먼저 걸러 냅니다.
+
+### 에너지 통계 대시보드 (`/info/stats`)
+- 연도 × 17개 시도 × 5개 에너지원 원자료(595행)를 한 번 받아 화면에서 집계합니다. 필터를 바꿔도 서버에 다시 묻지 않습니다.
+- 핵심 지표 4개, 연도별 누적 막대, 에너지원 비중 도넛, 시도별 순위 막대. 막대를 누르면 그 지역으로 필터가 바뀝니다.
+- 접근성: 차트마다 한 문장 요약(스크린리더용)과 같은 내용의 **표 보기**를 제공하고, 색만으로 구분하지 않도록 이름 · 값을 글자로 함께 씁니다. 색 조합은 색각 이상 시뮬레이션 검사를 통과했습니다.
+- ECharts 는 필요한 차트만 등록(tree-shaking)하고, 이 페이지에 들어올 때만 불러옵니다.
+
+### 회원 기능 (`/signup` · `/login` · `/support/qna/mine`)
+- Supabase Auth: 회원가입(`POST /auth/v1/signup`) → 이메일 인증 → 로그인(`POST /auth/v1/token`) → 토큰 자동 갱신 · 로그인 유지 → 로그아웃.
+- **보안은 DB 가 맡습니다(RLS)**. 비공개 글의 내용 · 답변은 작성자 본인 토큰으로 요청할 때만 돌아오고, 다른 사람 계정으로 글을 등록하거나 상태를 조작하는 요청은 DB 에서 거절됩니다. 이 규칙은 로컬 PostgreSQL 에서 역할별로 직접 시험했습니다.
+- 로그인 후 돌아갈 주소(`?next=`)는 사이트 안쪽 경로만 허용해 외부 사이트로 보내는 공격(오픈 리다이렉트)을 막습니다.
+- 인증 라이브러리는 기본 번들에 넣지 않았습니다. 로그인한 적이 있거나 로그인을 시도할 때만 불러와, 처음 온 방문자의 첫 화면 속도에 영향이 없습니다.
+- 비밀번호 안전 등급은 사이트의 **에너지소비효율등급 라벨** 모티프(1~5등급 색 막대)로 보여 줍니다. 인증 메일도 같은 디자인 언어로 만들었습니다(`supabase/email/confirm-signup.html`).
+
+### 그 밖의 화면
+기관소개 · 주요사업 · 정보공개 · 공지/보도자료/채용/카드뉴스 · 민원 신청 · FAQ · 찾아오시는 길 등 30여 개 화면.
+카드뉴스는 이미지가 아니라 **데이터(JSON) → 컴포넌트**로 그려 스크린리더가 내용을 그대로 읽고, `cqw`(컨테이너 단위)로 목록 · 메인 · 상세에서 같은 디자인이 비율대로 줄어듭니다.
+
+---
+
+## 2. 성능 개선 기록
+
+Lighthouse(모바일) 진단을 기준으로 원인을 하나씩 고쳤습니다.
+
+| 진단 | 원인 | 해결 |
+|---|---|---|
+| 사용하지 않는 JavaScript | 첫 방문에 모든 페이지 코드와 DB 라이브러리를 한 번에 받음 | 라우트별 코드 분할(`lazy`), 메인 화면만 기본 번들. 오류 클래스를 분리해 DB 라이브러리가 기본 번들에 끌려오지 않게 함 |
+| 렌더링 차단 요청 | 웹폰트 CSS 가 화면 그리기를 막음 | 폰트 CSS 비동기 로드(시스템 글꼴 먼저 표시) |
+| 이미지 전송 개선 | JPG 원본 · 보이지 않는 슬라이드 사진까지 첫 로딩에 받음 | WebP 변환 스크립트(`npm run images`, sharp), 작은 화면용 320px 판 + `srcset`, 2·3번째 슬라이드 사진 지연 로드 |
+| LCP 요청 탐색 | 첫 비주얼 이미지를 JS 실행 뒤에야 요청 | 메인 화면일 때만 HTML 에서 미리 요청(preload) |
+| 기본 스레드 작업 | 처음에 페이지 전체를 한 번에 배치(layout) | 첫 화면 아래 섹션에 `content-visibility: auto` (실측 높이로 자리 확보해 스크롤 튐 방지) |
+| robots.txt 오류 | SPA 리라이트로 HTML 이 대신 응답됨 | `robots.txt` · `sitemap.xml` 추가 |
+
+**결과**: 성능 78 → 92 · 접근성 100 · 권장사항 100 · 검색엔진 최적화 92 → 100.
+구조가 크게 바뀌는 변경 뒤에는 전체 27개 화면을 고치기 전과 나란히 캡처해 비교하는 시각 회귀 검사를 거쳤습니다.
+
+> 배운 점: 내 PC 의 Lighthouse 는 CPU 상태에 따라 TBT 가 크게 흔들려(같은 코드에서 100~620ms) 한 번의 측정으로 전후를 비교할 수 없었습니다. 같은 조건에서 여러 번 재거나 PageSpeed Insights 로 비교했습니다.
+
+---
+
+## 3. 설계 결정
+
+- **서버 상태와 화면 상태 분리** — 서버 데이터는 TanStack Query(캐시 · 재시도 · 취소), 필터 · 페이지 같은 화면 상태는 URL 검색 파라미터에 둡니다. 전역 상태 라이브러리 없이도 공유 가능한 화면이 됩니다.
+- **보안은 클라이언트가 아니라 DB 에** — 브라우저에는 공개 키만 두고, 누가 무엇을 읽고 쓸 수 있는지는 RLS 정책과 공개용 뷰(`qna_public`)로 정합니다. 서비스 키는 프론트에 두지 않습니다.
+- **라우트 메타데이터** — 라우트의 `handle: { gnbId, lnbId, title }` 을 레이아웃이 읽어 브레드크럼 · LNB · GNB 강조 · 서브 비주얼을 그립니다. 페이지마다 따로 지정하지 않습니다.
+- **디자인 토큰** — 색 · 간격 · 타이포 · 반경 · 그림자를 `styles/tokens.scss` 한 곳에 두고 `c()`, `sp()`, `type()` 함수로만 꺼내 씁니다. 없는 키를 쓰면 빌드가 실패해 오타가 바로 잡힙니다. 글자 크기는 rem 이라 글자크기 조절 버튼에 전체가 비례합니다.
+- **검사 규칙은 화면과 분리** — 입력 검사 · 비밀번호 등급 · 통계 집계를 순수 함수(`utils/`)로 빼 두어 테스트하고 여러 화면에서 같은 규칙을 씁니다.
+
+---
+
+## 4. 웹 접근성 (KWCAG 2.2)
+
+| 항목 | 적용 |
+|---|---|
+| 건너뛰기 · 제목 | 본문/주메뉴 바로가기, 페이지별 제목, h1~h4 계층 |
+| 키보드 | GNB 는 Tab 포커스로도 열리고 ESC 로 닫힘, 모달 포커스 트랩 · 포커스 복귀 |
+| 정지 기능 | 자동 슬라이드에 정지/재생, `prefers-reduced-motion` 이면 자동재생 · 애니메이션 끔 |
+| 폼 | 모든 입력에 label/legend, `aria-invalid` + `aria-errormessage`, 오류 시 첫 오류 칸으로 포커스 이동 |
+| 동적 변경 | 검색 결과 건수 · 통계 필터 결과 · 등록 결과를 `aria-live` 로 안내, 로딩 중 `aria-busy` |
+| 표 · 차트 | caption · scope, 모바일 카드형 전환, 차트 요약 문장 + 표 보기 |
+
+자동 검사(axe) 위반 0건, 전 페이지 모바일 가로 넘침 없음.
+
+---
+
+## 5. 실행 방법
 
 ```bash
 npm install
-npm run dev        # 개발 서버 (http://localhost:5173)
-npm run typecheck  # tsc --noEmit
-npm run build      # 타입체크 + dist/ 정적 파일 생성
-BASE_PATH=/저장소이름/ npm run build   # GitHub Pages 처럼 하위 폴더에 올릴 때
-npm run preview    # 빌드 결과 확인
+cp .env.example .env     # 아래 두 값을 채웁니다
+npm run images           # public/images 의 JPG → WebP 생성
+npm run dev              # http://localhost:5173
 ```
 
-## 라우트 (총 24개 + 홈)
+`.env`
+```
+VITE_SUPABASE_URL=https://<프로젝트>.supabase.co
+VITE_SUPABASE_ANON_KEY=<publishable(anon) 키>
+```
+환경변수가 없어도 사이트는 뜨며, 서버 데이터를 쓰는 화면에는 "연결 설정이 없어요" 안내가 나옵니다.
 
-`menu.json`의 2단 구조(gnbId/lnbId)를 그대로 `/{gnbId}/{lnbId}` 경로로 씁니다. 사업 상세도 예외 없이
-`/business/{id}` 하나로 통일됩니다.
+**DB 준비** — Supabase SQL Editor 에서 차례로 실행합니다.
+1. `supabase/qna.sql` — 묻고 답하기 테이블 · 공개용 뷰 · 예시 글
+2. `supabase/auth_qna.sql` — 작성자 칸 · 본인 글 조회 규칙
+3. `supabase/energy_stats.sql` — 통계 테이블 · 가상 데이터
 
-| 영역 | 경로 | 페이지 컴포넌트 |
-|---|---|---|
-| 홈 | `/` | `pages/home/HomePage` |
-| 기관소개 | `/about/greeting`, `/about/vision`, `/about/history`, `/about/org` | `pages/static/*` |
-| 주요사업 | `/business/:id` (solar · wind · efficiency 통합) | `pages/business/BusinessDetailPage` |
-| 정보공개 | `/info/disclosure`, `/info/request` | `pages/disclosure`, `pages/static/InfoRequestPage` |
-| 알림·소식 | `/news/{notice,press,recruit,cardnews}` (+ `/:id` 상세) | `pages/{notice,press,recruit,cardnews}` |
-| 참여·민원 | `/participation/petition`, `/participation/status` | `pages/static/Petition*Page` |
-| 고객지원 | `/support/{faq,qna,location}` (+ `/support/qna/:id`) | `pages/faq`, `pages/qna`, `pages/static/LocationPage` |
-| 정책 | `/policy` | `pages/static/PolicyPage` (SubLayout 밖, 독립 레이아웃) |
+| 명령 | 하는 일 |
+|---|---|
+| `npm run dev` | 개발 서버 |
+| `npm run build` | 타입 검사 + 배포용 빌드 |
+| `npm test` | 테스트 (Vitest) |
+| `npm run typecheck` | 타입 검사만 |
+| `npm run images` | 이미지 WebP 변환 |
 
-라우트의 `handle: { gnbId, lnbId, title?, contentClass? }` 메타데이터를 `SubLayout`과 `Header`가
-`useMatches()`로 읽어 breadcrumb·LNB·GNB 강조·서브 비주얼을 그립니다 — 페이지마다 따로 지정할 필요가 없습니다.
+---
 
-## 폴더 구조
+## 6. 테스트 · CI
+
+- **단위 테스트**: 입력 검사(DB 제약과 같은 경계값), 비밀번호 등급, 통계 집계, 오류 메시지 변환, 이름 가리기, 로그인 후 이동 주소 검증
+- **컴포넌트 테스트**(Testing Library): 비밀번호 등급의 스크린리더 문장, 페이지네이션의 비활성 버튼 · `aria-current` · 번호 범위
+- **GitHub Actions**: PR 과 main 푸시마다 타입 검사 → 테스트 → 빌드
+
+---
+
+## 7. 폴더 구조
 
 ```
 src/
-├─ main.tsx                 ReactDOM root + RouterProvider + ToastProvider + IconSprite
-├─ app/
-│  ├─ router.tsx            라우트 테이블 (createBrowserRouter)
-│  ├─ routeConfig.ts        RouteHandle 타입
-│  ├─ RootLayout.tsx        Header + <Outlet/> + Footer, 공통 레이아웃 루트
-│  ├─ useRouteHandle.ts     현재 매치의 handle(gnbId/lnbId) 조회
-│  └─ AllMenuContext.tsx    전체메뉴 다이얼로그를 앱 루트에서 공유
-├─ layout/
-│  ├─ Header/               GNB 메가메뉴, 전체메뉴, 통합검색, 글자크기, 유틸바
-│  ├─ Footer/
-│  └─ SubLayout/             서브페이지 공통 셸 — breadcrumb + LNB + <Outlet/>
-├─ pages/                   라우트별 페이지 (home, business, notice, press, qna,
-│                           recruit, cardnews, faq, disclosure, static)
-├─ components/              재사용 UI — 컴포넌트당 `Component.tsx` + `Component.module.scss`
-├─ data/                    JSON(`data/json/*.json`) + TypeScript 타입 + 래퍼
-├─ hooks/                   바닐라 JS 모듈을 대체한 커스텀 훅 (아래 표)
-├─ utils/                   depth1/depth2, find/where/take, statusVariant, isoDate 등
-└─ styles/                  tokens.scss · mixins.scss(디자인 토큰, 전역) · global.scss(리셋/베이스)
+├─ api/          서버 요청 (qna · stats · auth) — Supabase 호출과 응답 변환
+├─ auth/         로그인 상태 Provider, 로그인 필요 화면 가드
+├─ app/          라우터(라우트별 코드 분할), 레이아웃 루트
+├─ layout/       Header(GNB · 전체메뉴 · 통합검색) · Footer · SubLayout
+├─ pages/        화면 (home · qna · stats · auth · notice · business …)
+├─ components/   재사용 UI — Component.tsx + Component.module.scss
+├─ hooks/        슬라이더 · 탭 · 모달 · 디바운스 등 커스텀 훅
+├─ lib/          Supabase 클라이언트 · Query 클라이언트
+├─ utils/        검사 규칙 · 통계 집계 · 날짜 · 이미지 경로 (테스트 대상)
+└─ styles/       디자인 토큰 · 믹스인 · 전역 스타일
+supabase/        DB SQL · 인증 메일 템플릿
+scripts/         이미지 최적화 스크립트
 ```
 
-## 디자인 토큰
-
-값은 `src/styles/tokens.scss` 한 곳에만 있고, 모든 `*.module.scss`는 파일 맨 위에서
-`@use 'tokens' as *; @use 'mixins' as *;` 로 불러와 **숫자·색을 직접 쓰지 않고** 아래 함수로만 꺼냅니다.
-없는 키를 쓰면 빌드가 실패하므로 오타도 바로 잡힙니다.
-
-| 종류 | 사용법 | 예시 결과 |
-|---|---|---|
-| 색 | `c('primary')` · `ca('white', .6)` | `var(--c-primary)` · `rgba(255,255,255,.6)` |
-| 그라디언트 | `gradient('brand')` | 남색→파랑→청록 |
-| 간격 (4px 그리드) | `sp(4)` · `sp(2.5)` | `16px` · `10px` |
-| 타이포 (역할 기반) | `@include type('h4')` · `type('label', bold)` · `fs('body')` | 크기·굵기·행간·자간 한 번에 |
-| 반경 / 그림자 | `r('lg')` · `shadow('md')` | `16px` · 카드 그림자 |
-| 레이어 | `z('header')` | `100` |
-| 반응형 | `@include down('md') { }` | `max-width: 767.98px` |
-
-- 글자 크기는 rem이라 **글자크기 조절 버튼**(`useFontSize`, html `data-font-scale`)에 전체가 비례합니다.
-- 색은 `:root` CSS 변수로도 출력되어 런타임에 바꿀 수 있습니다.
-- `.sr-only`, `.img-3d`(mix-blend-mode 합성), `.num`, `.container` 등은 CSS Modules로 스코프하지 않는
-  전역 유틸리티로 `global.scss`에 남아 있습니다.
-
-## 바닐라 JS → React 훅
-
-기존 `src/js/modules/*.js`의 동작을 그대로(또는 더 접근성 있게) 포팅한 훅들입니다.
-
-| 훅 | 대응 기능 |
-|---|---|
-| `useDialog` | 모달 포커스 트랩 · ESC 닫기 · 스크롤 잠금 · 포커스 복귀 (전체메뉴 등) |
-| `useGnbMegaMenu` | GNB hover/focus 메가메뉴 (데스크톱 전용) |
-| `useFontSize` / `useHeaderSearch` / `useDropdown` / `useTopButton` | 헤더 유틸리티 |
-| `useTabs` / `useAccordion` / `useChipFilter` / `useAnchorTabs` | ARIA 탭 · 아코디언 · 카테고리 필터 · 스크롤 연동 탭 |
-| `useSlider` / `useRollingBanner` | 슬라이더 자동재생(`prefers-reduced-motion` 비활성화) · 관련사이트 롤링 |
-| `useCharCounter` / `useFileValidation` / `useEmailDomainSelect` / `useFormValidation` | 민원 폼 입력 보조 |
-| `useLookup` / `useSurvey` / `usePageTools` / `useCopyToClipboard` | 조회 포커스 이동 · 만족도조사 · 공유/인쇄 · 복사 |
-| `useScrollToTop` | 라우트 전환 시 스크롤 리셋 (멀티페이지에서는 공짜였던 동작) |
-
-## 컴포넌트 재사용
-
-목록은 전부 데이터로 그립니다. 공지사항을 한 건 추가하려면 `data/json/notices.json`에 항목만 넣으면 됩니다.
-사업 상세도 템플릿 하나(`pages/business/BusinessDetailPage`)이므로, 새 사업은 `business.json`에
-항목을 추가하면 메인 '주요사업' 카드와 `/business/{id}` 상세가 함께 생깁니다.
-
-대표 공용 컴포넌트: `Icon`(SVG 스프라이트) · `Badge` · `Button`/`IconButton` · `SlideStack`(캐러셀 공통 패턴) ·
-`BoardTable` · `SearchFilter` · `ListInfo` · `Pagination` · `ChipFilter` · `AttachmentList`(신규 추출) ·
-`ProgramBanner` · `KeyFacts` · `DataTable` · `ContactInfo` · `Steps` · `Stepper` · `Tracker`.
-
-## 웹 접근성 (KWCAG 2.2 대응)
-
-| 항목 | 적용 내용 |
-|---|---|
-| 반복 영역 건너뛰기 | 본문 / 주메뉴 바로가기 링크 |
-| 제목 제공 | 페이지별 고유 `<title>`, h1(로고)~h4 계층 |
-| 키보드 사용 | GNB는 Tab 포커스로도 열림, ESC로 닫고 1depth로 포커스 복귀 |
-| 초점 이동 | 전체메뉴 모달: 포커스 트랩 · ESC 닫기 · 열었던 버튼으로 포커스 복귀 (`useDialog`) |
-| 대체 텍스트 | 카드뉴스는 이미지가 아닌 HTML 텍스트로 그려 스크린리더가 그대로 읽음 + 전체 `<details>` 텍스트 버전, 지도에 위치 설명 |
-| 정지 기능 | 메인 비주얼 · 관련사이트 롤링에 정지/재생 버튼, hover·focus 시 일시정지, `prefers-reduced-motion` 시 자동재생 안 함 |
-| 탭 | `role="tablist"` + 좌우 화살표 · Home/End 키 (`useTabs`) |
-| 아코디언 | `button[aria-expanded]` + `role="region"` |
-| 표 | `caption`, `scope` 지정, 모바일에서는 카드형으로 전환(시맨틱 유지) |
-| 레이블 | 모든 입력 요소에 `label`/`legend`, 필수 항목 표시, `aria-invalid` + `aria-errormessage` 오류 안내 |
-| 새 창 | 새 창으로 열리는 링크에 안내 텍스트 |
-| 현재 위치 | GNB·LNB·브레드크럼에 `aria-current` |
-
-SPA 전환에서 새로 생긴 주의점: `IntersectionObserver`/`ResizeObserver`/`matchMedia` 리스너를 쓰는 훅은
-모두 `useEffect` cleanup에서 해제합니다(멀티페이지에서는 페이지 이동마다 공짜로 해제됐던 부분). 라우트
-전환 시 스크롤 위치는 `useScrollToTop`이 되돌립니다.
-
-## 카드뉴스 디자인
-
-카드뉴스는 이미지 파일이 아니라 **데이터(`cardnews.json`) → 컴포넌트(`CardnewsCard`)** 로 그립니다.
-
-- 모티프: 가전제품의 **에너지소비효율등급 라벨**. 카드 오른쪽의 1~5등급 색 막대와 ◀ 화살표가 라벨처럼 보이면서,
-  화살표가 장을 넘길수록 아래로 내려가 **진행 위치 표시** 역할을 합니다.
-- 장 종류: 표지(cover) · 질문/답(qa) · 숫자(stat) · 체크리스트(list) · 절차(steps) · 마무리(end). JSON 에 장을 추가하면 끝.
-- 톤 5가지(mint · blue · warm · navy · green)를 CSS 변수로 바꿔 끼웁니다.
-- 모든 치수를 카드 너비 기준 `cqw`(container query 단위)로 잡아, 목록 썸네일 · 메인 화면 · 상세 뷰어에서 같은 디자인이 비율 그대로 줄어듭니다.
-- 상세 뷰어: 버튼 · 좌우 방향키 · 모바일 스와이프 · 장 미리보기로 이동, 자동재생 없음, 바뀐 장 번호를 `aria-live` 로 안내.
-
-## 원본(HTML 버전)과 동일성 검수
-
-React 전환 후 원본과 25페이지 × 2해상도(1440·390)를 자동 비교했습니다.
-화면 캡처 픽셀 비교 + 텍스트·아이콘 요소별 크기/위치/색 비교로 차이를 찾아 고쳤고, 카드뉴스(새 디자인)를 뺀 모든 페이지가 원본과 같은 화면입니다.
-전환 과정에서 빠졌던 기능(GNB 전체 펼침 · ESC 닫기, 처리현황 예시 결과, 상세 글 원문 등)도 복구했습니다.
+---
 
 ## 참고
-
-- 기관명, 주소, 연락처, 통계 수치는 모두 가상의 데이터입니다.
-- 사진·3D 그래픽·인사말 기관장 사진은 AI로 생성한 이미지이며, 기관장은 실존하지 않는 가상 인물입니다.
-- 폰트: Pretendard(본문), Inter(숫자) — CDN 로드
+- 기관명 · 주소 · 연락처 · 통계 수치는 모두 가상입니다.
+- 처음에는 Handlebars 멀티페이지 + 바닐라 JS 로 퍼블리싱했고, 이후 React + TypeScript SPA 로 전환했습니다. 전환 후 원본과 25페이지 × 2해상도를 화면 픽셀 · 요소 단위로 자동 비교해 같은 화면임을 확인했습니다.

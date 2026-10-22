@@ -8,28 +8,19 @@ import { formStyles as f } from '@/components/Form';
 import { safeNext, useAuth } from '@/auth';
 import { authErrorMessage } from '@/api/auth';
 import { PasswordField } from './PasswordField';
-import { PasswordGrade, passwordRules } from './PasswordGrade';
+import { PasswordGrade } from './PasswordGrade';
+import { validateSignup, type SignupField } from '@/utils/validation';
 import { AuthShell } from './AuthShell';
 import styles from './AuthPage.module.scss';
 
-type Field = 'name' | 'email' | 'password' | 'passwordConfirm' | 'agree';
+type Field = SignupField;
 type Errors = Partial<Record<Field, string>>;
 
-const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const ORDER: Field[] = ['name', 'email', 'password', 'passwordConfirm', 'agree'];
 const fid = (name: Field) => `signup-${name}`;
 
 
-function validate(v: { name: string; email: string; password: string; passwordConfirm: string; agree: boolean }): Errors {
-  const errors: Errors = {};
-  const name = v.name.trim();
-  if (name.length < 2 || name.length > 20) errors.name = '이름을 2~20자로 입력해 주세요.';
-  if (!EMAIL.test(v.email.trim())) errors.email = '이메일 주소를 정확히 입력해 주세요.';
-  if (!passwordRules(v.password).every((r) => r.ok)) errors.password = '영문과 숫자를 섞어 8자 이상으로 입력해 주세요.';
-  if (!errors.password && v.password !== v.passwordConfirm) errors.passwordConfirm = '비밀번호가 서로 달라요.';
-  if (!v.agree) errors.agree = '개인정보 수집·이용에 동의해 주세요.';
-  return errors;
-}
+const validate = validateSignup;
 
 export default function SignupPage() {
   const auth = useAuth();
