@@ -28,7 +28,9 @@
 }
 
 .card {
-  box-shadow: shadow('photo');
+  // box-shadow 는 바깥 상자(네모)를 따라 그려져 둥근 모서리 밖으로 그림자가 튀어나온다.
+  // drop-shadow 는 실제로 보이는 모양(둥근 카드)을 따라 그림자를 그린다.
+  filter: drop-shadow(0 16px 20px rgba(11, 31, 68, 0.12));
 }
 
 .controls {

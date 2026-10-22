@@ -3,7 +3,7 @@ import { Icon } from '@/components/Icon';
 import { Eyebrow } from '@/components/Heading';
 import { Button } from '@/components/Button';
 import { business } from '@/data/business';
-import { imageUrl } from '@/utils/asset';
+import { artProps } from '@/utils/asset';
 import styles from './HomePage.module.scss';
 
 export default function BizSection() {
@@ -26,7 +26,7 @@ export default function BizSection() {
             <li key={b.id} className={styles.bizCard}>
               <div>
                 <span className={styles.bizCardVisual}>
-                  <img className={styles.bizCardImg} src={imageUrl(b.card.img)} alt="" width={480} height={480} loading="lazy" />
+                  <img className={styles.bizCardImg} {...artProps(b.card.img)} alt="" width={480} height={480} loading="lazy" />
                 </span>
                 <span className={styles.bizCardTag}>{b.card.tag}</span>
                 <h4 className={styles.bizCardTitle}>
