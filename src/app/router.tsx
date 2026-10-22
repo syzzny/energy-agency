@@ -10,6 +10,7 @@ import PressListPage from '@/pages/press/PressListPage';
 import PressViewPage from '@/pages/press/PressViewPage';
 import QnaListPage from '@/pages/qna/QnaListPage';
 import QnaViewPage from '@/pages/qna/QnaViewPage';
+import QnaWritePage from '@/pages/qna/QnaWritePage';
 import RecruitListPage from '@/pages/recruit/RecruitListPage';
 import RecruitViewPage from '@/pages/recruit/RecruitViewPage';
 import FaqPage from '@/pages/faq/FaqPage';
@@ -67,6 +68,7 @@ export const router = createBrowserRouter([
 
           { path: 'support/faq', element: <FaqPage />, handle: handle('support', 'faq') },
           { path: 'support/qna', element: <QnaListPage />, handle: handle('support', 'qna') },
+          { path: 'support/qna/new', element: <QnaWritePage />, handle: handle('support', 'qna') },
           { path: 'support/qna/:id', element: <QnaViewPage />, handle: handle('support', 'qna') },
           { path: 'support/location', element: <LocationPage />, handle: handle('support', 'location', { contentClass: 'contentWideGap' }) },
         ],

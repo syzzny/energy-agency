@@ -1,0 +1,86 @@
+@use 'tokens' as *;
+@use 'mixins' as *;
+
+// ---------- 빈 결과 · 오류 ----------
+.message {
+  display: grid;
+  justify-items: center;
+  gap: sp(2);
+  padding: sp(14) sp(5);
+  text-align: center;
+}
+.icon {
+  @include icon-box(56px, 50%, c('gray-100'));
+  margin-bottom: sp(2);
+  color: c('gray-500');
+
+  :global(.icon) {
+    width: 26px;
+    height: 26px;
+  }
+
+  &[data-variant='error'] {
+    color: c('warning-icon');
+    background: c('warning-bg');
+  }
+}
+.title {
+  color: c('ink');
+  @include type('title', bold, 1.5);
+}
+.desc {
+  max-width: 420px;
+  color: c('gray-500');
+  @include type('body-sm', regular, 1.6);
+}
+.action {
+  margin-top: sp(3);
+}
+
+.messageRow td {
+  padding: 0 !important;
+  border-bottom: 1px solid c('gray-200');
+  text-align: center !important;
+
+  // 모바일에서 표가 카드형(grid)으로 바뀌어도 한 줄 전체를 차지
+  grid-column: 1 / -1;
+}
+
+// ---------- 스켈레톤 ----------
+.bar {
+  display: inline-block;
+  height: 14px;
+  border-radius: 6px;
+  vertical-align: middle;
+  background: linear-gradient(90deg, c('gray-100') 25%, c('gray-200') 50%, c('gray-100') 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.4s ease-in-out infinite;
+}
+.skeletonRow td {
+  height: 61px;
+}
+.articleSkeleton {
+  display: grid;
+  gap: sp(4);
+  padding: sp(8) sp(2);
+  border-top: 2px solid c('ink');
+
+  .bar {
+    display: block;
+  }
+}
+
+@keyframes shimmer {
+  from {
+    background-position: 100% 0;
+  }
+  to {
+    background-position: -100% 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bar {
+    animation: none;
+  }
+}
