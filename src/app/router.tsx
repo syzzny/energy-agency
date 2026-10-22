@@ -25,6 +25,8 @@ export const router = createBrowserRouter([
     children: [
       { index: true, element: <HomePage /> },
       { path: 'policy', lazy: page(() => import('@/pages/static/PolicyPage')) },
+      { path: 'login', lazy: page(() => import('@/pages/auth/LoginPage')) },
+      { path: 'signup', lazy: page(() => import('@/pages/auth/SignupPage')) },
       {
         element: <SubLayout />,
         children: [
@@ -54,6 +56,7 @@ export const router = createBrowserRouter([
 
           { path: 'support/faq', lazy: page(() => import('@/pages/faq/FaqPage')), handle: handle('support', 'faq') },
           { path: 'support/qna', lazy: page(() => import('@/pages/qna/QnaListPage')), handle: handle('support', 'qna') },
+          { path: 'support/qna/mine', lazy: page(() => import('@/pages/qna/MyQnaPage')), handle: handle('support', 'qna', { title: '내 질문' }) },
           { path: 'support/qna/new', lazy: page(() => import('@/pages/qna/QnaWritePage')), handle: handle('support', 'qna') },
           { path: 'support/qna/:id', lazy: page(() => import('@/pages/qna/QnaViewPage')), handle: handle('support', 'qna') },
           { path: 'support/location', lazy: page(() => import('@/pages/static/LocationPage')), handle: handle('support', 'location', { contentClass: 'contentWideGap' }) },

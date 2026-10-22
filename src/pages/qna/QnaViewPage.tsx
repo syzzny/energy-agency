@@ -1,4 +1,4 @@
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { Badge } from '@/components/Badge';
 import { Button } from '@/components/Button';
@@ -7,6 +7,7 @@ import { ArticleSkeleton, StateMessage } from '@/components/AsyncState';
 import { NoticeBox } from '@/components/NoticeBox';
 import { errorMessage, fetchQna } from '@/api/qna';
 import { statusVariant } from '@/utils/status';
+import { useAuth } from '@/auth';
 import { formatDate, isoDate } from '@/utils/date';
 
 /** 줄바꿈을 문단으로 */
@@ -18,6 +19,7 @@ const paragraphs = (text: string) =>
 
 export default function QnaViewPage() {
   const { id } = useParams();
+  const { user } = useAuth();
   const qnaId = Number(id);
   const validId = Number.isInteger(qnaId) && qnaId > 0;
 
@@ -80,10 +82,21 @@ export default function QnaViewPage() {
         />
 
         <ArticleBody>
-          {item.isPrivate ? (
-            <NoticeBox variant="info">비공개 글입니다. 작성자 본인과 담당 부서만 내용을 확인할 수 있어요.</NoticeBox>
+          {item.isPrivate && !item.isMine ? (
+            <NoticeBox variant="info">
+              비공개 글입니다. 작성자 본인과 담당 부서만 내용을 확인할 수 있어요.
+              {!user && (
+                <>
+                  {' '}
+                  작성자라면 <Link to={`/login?next=${encodeURIComponent(`/support/qna/${item.id}`)}`}>로그인</Link>해 주세요.
+                </>
+              )}
+            </NoticeBox>
           ) : (
-            paragraphs(item.content ?? '')
+            <>
+              {item.isPrivate && <NoticeBox variant="info">비공개로 등록한 내 글이에요. 다른 사람에게는 내용과 답변이 보이지 않아요.</NoticeBox>}
+              {paragraphs(item.content ?? '')}
+            </>
           )}
         </ArticleBody>
 
@@ -94,7 +107,7 @@ export default function QnaViewPage() {
         )}
       </ArticleRoot>
 
-      <ListBtn href="/support/qna" />
+      <ListBtn href={item.isMine ? '/support/qna/mine' : '/support/qna'} />
     </>
   );
 }

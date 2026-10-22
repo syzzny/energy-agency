@@ -16,6 +16,7 @@ let client: SupabaseClient | null = null;
 /** 설정이 없으면 앱 전체가 멈추지 않도록, 호출하는 순간에 오류를 던져 화면에서 안내한다 */
 export function getSupabase(): SupabaseClient {
   if (!url || !key) throw new ConfigError();
-  client ??= createClient(url, key, { auth: { persistSession: false } });
+  // 로그인 세션은 브라우저(localStorage)에 저장되어 새로고침해도 유지되고, 만료 전에 자동으로 갱신된다
+  client ??= createClient(url, key, { auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true } });
   return client;
 }

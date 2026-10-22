@@ -5,6 +5,7 @@ import clsx from 'clsx';
 import { menu } from '@/data/menu';
 import { menuPath } from '@/utils/menu';
 import { Icon } from '@/components/Icon';
+import { useAuthLinks } from './useAuthLinks';
 import styles from './Header.module.scss';
 
 export interface AllMenuDialogProps {
@@ -18,6 +19,7 @@ export interface AllMenuDialogProps {
 /** 전체메뉴(사이트맵/모바일 드로어) — `partials/header.hbs`의 `#allmenu` 대응 */
 export default function AllMenuDialog({ dialogRef, isOpen, onClose, currentGnbId, currentLnbId }: AllMenuDialogProps) {
   const [openGnbId, setOpenGnbId] = useState<string | null>(currentGnbId ?? null);
+  const { user, loginHref, onSignOut } = useAuthLinks();
 
   return (
     <div
@@ -35,8 +37,25 @@ export default function AllMenuDialog({ dialogRef, isOpen, onClose, currentGnbId
             전체메뉴
           </h2>
           <div className={styles.allmenuMoUtil}>
-            <a href="#">로그인</a>
-            <a href="#">회원가입</a>
+            {user ? (
+              <>
+                <Link to="/support/qna/mine" onClick={onClose}>
+                  {user.name}님 · 내 질문
+                </Link>
+                <button type="button" onClick={() => (onClose(), onSignOut())}>
+                  로그아웃
+                </button>
+              </>
+            ) : (
+              <>
+                <Link to={loginHref} onClick={onClose}>
+                  로그인
+                </Link>
+                <Link to="/signup" onClick={onClose}>
+                  회원가입
+                </Link>
+              </>
+            )}
             <a href="#" lang="en">
               ENGLISH
             </a>

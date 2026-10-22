@@ -18,6 +18,8 @@ export interface Qna {
   answerDept: string | null;
   answeredAt: string | null;
   createdAt: string;
+  /** 로그인한 본인이 쓴 글 (비공개여도 내용 · 답변을 볼 수 있다) */
+  isMine?: boolean;
 }
 
 interface QnaRow {
@@ -86,11 +88,42 @@ export async function fetchQnaList({ page, pageSize, keyword = '', field = 'all'
 }
 
 export async function fetchQna(id: number, signal?: AbortSignal): Promise<Qna | null> {
-  let query = getSupabase().from('qna_public').select('*').eq('id', id);
+  const sb = getSupabase();
+  let query = sb.from('qna_public').select('*').eq('id', id);
   if (signal) query = query.abortSignal(signal);
   const { data, error } = await query.maybeSingle();
   if (error) throw error;
-  return data ? toQna(data as QnaRow) : null;
+  if (!data) return null;
+  const item = toQna(data as QnaRow);
+
+  // 비공개 글이고 로그인 상태라면, 원본 테이블에서 '본인 글'로 다시 조회해 본다.
+  // DB 규칙(RLS)이 본인 글만 돌려주므로, 남의 글이면 빈 결과가 와서 그대로 가려진 채 보인다.
+  if (item.isPrivate) {
+    const { data: session } = await sb.auth.getSession();
+    if (session.session) {
+      let own = sb.from('qna').select('*').eq('id', id);
+      if (signal) own = own.abortSignal(signal);
+      const { data: mine } = await own.maybeSingle();
+      if (mine) return { ...toQna(mine as QnaRow), isMine: true };
+    }
+  }
+  return item;
+}
+
+/** 내 질문 목록 — 원본 테이블에서 본인 글만 (비공개 글 내용 포함) */
+export async function fetchMyQnaList({ userId, page, pageSize }: { userId: string; page: number; pageSize: number }, signal?: AbortSignal): Promise<QnaListResult> {
+  const from = (page - 1) * pageSize;
+  let query = getSupabase()
+    .from('qna')
+    .select('*', { count: 'exact' })
+    .eq('user_id', userId)
+    .order('created_at', { ascending: false })
+    .order('id', { ascending: false })
+    .range(from, from + pageSize - 1);
+  if (signal) query = query.abortSignal(signal);
+  const { data, error, count } = await query;
+  if (error) throw error;
+  return { items: (data as QnaRow[]).map((r) => ({ ...toQna(r), isMine: true })), total: count ?? 0 };
 }
 
 export interface NewQna {

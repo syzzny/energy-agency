@@ -1,4 +1,4 @@
-import { useRef, useState, type FormEvent } from 'react';
+import { useEffect, useRef, useState, type FormEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import clsx from 'clsx';
@@ -8,6 +8,8 @@ import { useToast } from '@/components/Toast';
 import { formStyles as f } from '@/components/Form';
 import articleStyles from '@/components/Article/Article.module.scss';
 import { createQna, errorMessage, maskName, type NewQna } from '@/api/qna';
+import { useAuth } from '@/auth';
+import { Link } from 'react-router-dom';
 
 /** DB 의 check 제약과 같은 규칙 — 서버에 보내기 전에 먼저 걸러 준다 */
 const RULES = {
@@ -46,8 +48,14 @@ export default function QnaWritePage() {
   const queryClient = useQueryClient();
   const toast = useToast();
   const formRef = useRef<HTMLFormElement>(null);
+  const { user } = useAuth();
 
-  const [values, setValues] = useState<NewQna>({ writerName: '', title: '', content: '', isPrivate: false });
+  const [values, setValues] = useState<NewQna>({ writerName: user?.name.slice(0, 20) ?? '', title: '', content: '', isPrivate: false });
+
+  // 로그인 정보가 늦게 확인되면(새로고침 직후) 그때 이름을 채운다
+  useEffect(() => {
+    if (user) setValues((prev) => ({ ...prev, writerName: user.name.slice(0, 20) }));
+  }, [user]);
   const [agree, setAgree] = useState(false);
   const [errors, setErrors] = useState<Errors>({});
 
@@ -55,7 +63,8 @@ export default function QnaWritePage() {
     mutationFn: createQna,
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: ['qna'] });
-      toast.show('질문이 등록되었어요. 답변이 달리면 목록에서 확인할 수 있어요.');
+      // 등록 후에는 항상 전체 목록으로 (맨 위에 방금 쓴 글이 보인다)
+      toast.show(user ? '질문이 등록되었어요. 상단의 내 질문에서도 모아 볼 수 있어요.' : '질문이 등록되었어요. 답변이 달리면 목록에서 확인할 수 있어요.');
       navigate('/support/qna');
     },
   });
@@ -120,9 +129,17 @@ export default function QnaWritePage() {
             required
             value={values.writerName}
             onChange={(e) => set('writerName', e.target.value)}
+            readOnly={Boolean(user)}
             aria-describedby="qna-writerName-help"
             {...err('writerName')}
           />
+          {user ? (
+            <p className={f.fieldHelp}>로그인한 이름으로 등록되고, 내 질문에서 다시 볼 수 있어요.</p>
+          ) : (
+            <p className={f.fieldHelp}>
+              <Link to="/login?next=%2Fsupport%2Fqna%2Fnew">로그인</Link>하고 등록하면 비공개 질문도 나중에 다시 볼 수 있어요.
+            </p>
+          )}
           <p className={f.fieldHelp} id="qna-writerName-help">
             목록에는 {values.writerName.trim().length >= 2 ? <strong>{maskName(values.writerName)}</strong> : '홍**'}처럼 첫 글자만 보여요.
           </p>
