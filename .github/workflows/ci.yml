@@ -1,0 +1,24 @@
+# 코드를 올리거나 PR 을 만들 때마다 자동으로 타입 검사 · 테스트 · 빌드를 돌린다
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: 타입 검사
+        run: npm run typecheck
+      - name: 테스트
+        run: npm test
+      - name: 빌드
+        run: npx vite build

@@ -7,10 +7,10 @@ import { formStyles as f } from '@/components/Form';
 import { safeNext, useAuth } from '@/auth';
 import { authErrorMessage } from '@/api/auth';
 import { PasswordField } from './PasswordField';
+import { EMAIL_PATTERN } from '@/utils/validation';
 import { AuthShell } from './AuthShell';
 import styles from './AuthPage.module.scss';
 
-const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const SAVED_EMAIL = 'ea-saved-email';
 
 
@@ -42,7 +42,7 @@ export default function LoginPage() {
   const onSubmit = async (e: FormEvent) => {
     e.preventDefault();
     if (pending) return;
-    if (!EMAIL.test(email.trim())) {
+    if (!EMAIL_PATTERN.test(email.trim())) {
       setInvalid('email');
       setError('이메일 주소를 정확히 입력해 주세요.');
       document.getElementById('loginEmail')?.focus();

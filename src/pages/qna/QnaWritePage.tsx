@@ -9,29 +9,13 @@ import { formStyles as f } from '@/components/Form';
 import articleStyles from '@/components/Article/Article.module.scss';
 import { createQna, errorMessage, maskName, type NewQna } from '@/api/qna';
 import { useAuth } from '@/auth';
+import { QNA_RULES, validateQna, type QnaField } from '@/utils/validation';
 import { Link } from 'react-router-dom';
 
-/** DB 의 check 제약과 같은 규칙 — 서버에 보내기 전에 먼저 걸러 준다 */
-const RULES = {
-  writerName: { min: 2, max: 20, label: '이름' },
-  title: { min: 2, max: 100, label: '제목' },
-  content: { min: 5, max: 4000, label: '내용' },
-} as const;
-
-type Field = keyof typeof RULES | 'agree';
+const RULES = QNA_RULES;
+type Field = QnaField;
 type Errors = Partial<Record<Field, string>>;
-
-function validate(v: NewQna, agree: boolean): Errors {
-  const errors: Errors = {};
-  (Object.keys(RULES) as (keyof typeof RULES)[]).forEach((key) => {
-    const { min, max, label } = RULES[key];
-    const len = v[key].trim().length;
-    if (len === 0) errors[key] = `${label}을 입력해 주세요.`;
-    else if (len < min || len > max) errors[key] = `${label}은 ${min}~${max.toLocaleString()}자로 입력해 주세요.`;
-  });
-  if (!agree) errors.agree = '개인정보 수집·이용에 동의해 주세요.';
-  return errors;
-}
+const validate = validateQna;
 
 const ORDER: Field[] = ['writerName', 'title', 'content', 'agree'];
 

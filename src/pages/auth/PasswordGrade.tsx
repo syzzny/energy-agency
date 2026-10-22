@@ -1,27 +1,11 @@
 import clsx from 'clsx';
 import { Icon } from '@/components/Icon';
+import { passwordGrade, passwordRules } from '@/utils/validation';
 import styles from './AuthPage.module.scss';
 
 /** 에너지소비효율등급 라벨과 같은 5단계 색 (카드뉴스 등급 막대와 동일) */
 const COLORS = ['#00a651', '#8cc63f', '#f2c500', '#f7941d', '#e5352c'];
 const LABELS = ['아주 안전해요', '안전해요', '보통이에요', '약해요', '매우 약해요'];
-
-/** 1등급(가장 안전) ~ 5등급 */
-export function passwordGrade(pw: string): number {
-  let score = 0;
-  if (pw.length >= 8) score++;
-  if (pw.length >= 12) score++;
-  if (/[A-Za-z]/.test(pw) && /\d/.test(pw)) score++;
-  if (/[^A-Za-z0-9]/.test(pw)) score++;
-  if (/[a-z]/.test(pw) && /[A-Z]/.test(pw)) score++;
-  return 5 - Math.min(4, score);
-}
-
-export const passwordRules = (pw: string) => [
-  { label: '영문', ok: /[A-Za-z]/.test(pw) },
-  { label: '숫자', ok: /\d/.test(pw) },
-  { label: '8자 이상', ok: pw.length >= 8 },
-];
 
 /**
  * 비밀번호 안전 등급 — 효율등급 라벨처럼 1~5등급 색 막대 위에 지금 등급을 ▼ 로 가리킨다
