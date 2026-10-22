@@ -58,6 +58,11 @@
         "href": "sub/disclosure.html"
       },
       {
+        "id": "stats",
+        "name": "에너지 통계",
+        "href": "sub/stats.html"
+      },
+      {
         "id": "request",
         "name": "정보공개 청구",
         "href": "sub/info-request.html"
