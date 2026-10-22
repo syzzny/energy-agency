@@ -21,3 +21,4 @@ export { useFormValidation } from './useFormValidation';
 export { useLookup } from './useLookup';
 export { useSurvey } from './useSurvey';
 export { useMediaQuery, useIsMobile } from './useMediaQuery';
+export { useDebouncedValue } from './useDebouncedValue';

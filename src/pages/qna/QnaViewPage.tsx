@@ -1,51 +1,99 @@
 import { useParams } from 'react-router-dom';
+import { useQuery } from '@tanstack/react-query';
 import { Badge } from '@/components/Badge';
-import { ArticleRoot, ArticleHead, ArticleBody, AnswerBlock, ListBtn, PostNav } from '@/components/Article';
-import { qna } from '@/data/qna';
+import { Button } from '@/components/Button';
+import { ArticleRoot, ArticleHead, ArticleBody, AnswerBlock, ListBtn } from '@/components/Article';
+import { ArticleSkeleton, StateMessage } from '@/components/AsyncState';
+import { NoticeBox } from '@/components/NoticeBox';
+import { errorMessage, fetchQna } from '@/api/qna';
 import { statusVariant } from '@/utils/status';
-import { isoDate } from '@/utils/date';
+import { formatDate, isoDate } from '@/utils/date';
+
+/** 줄바꿈을 문단으로 */
+const paragraphs = (text: string) =>
+  text
+    .split(/\n+/)
+    .filter((t) => t.trim())
+    .map((t, i) => <p key={i}>{t}</p>);
 
 export default function QnaViewPage() {
   const { id } = useParams();
-  // 주소에 번호가 없으면 답변이 달린 대표 게시물을 보여준다
-  const item = qna.find((q) => q.no === id) ?? qna.find((q) => q.detail) ?? qna[0];
+  const qnaId = Number(id);
+  const validId = Number.isInteger(qnaId) && qnaId > 0;
+
+  const { data: item, error, isPending, isError, refetch } = useQuery({
+    queryKey: ['qna', 'detail', qnaId],
+    queryFn: ({ signal }) => fetchQna(qnaId, signal),
+    enabled: validId,
+  });
+
+  if (validId && isPending) {
+    return (
+      <div aria-busy="true">
+        <p className="sr-only" role="status">
+          게시글을 불러오는 중입니다.
+        </p>
+        <ArticleSkeleton />
+      </div>
+    );
+  }
+
+  if (isError) {
+    return (
+      <>
+        <StateMessage
+          variant="error"
+          title="게시글을 불러오지 못했어요"
+          desc={errorMessage(error)}
+          action={
+            <Button variant="line" icon="right" onClick={() => refetch()}>
+              다시 시도
+            </Button>
+          }
+        />
+        <ListBtn href="/support/qna" />
+      </>
+    );
+  }
+
+  if (!validId || !item) {
+    return (
+      <>
+        <StateMessage variant="empty" title="게시글을 찾을 수 없어요" desc="삭제되었거나 주소가 잘못되었을 수 있어요. 목록에서 다시 찾아 주세요." />
+        <ListBtn href="/support/qna" />
+      </>
+    );
+  }
+
+  const date = formatDate(item.createdAt);
 
   return (
     <>
-      {/* 게시글 본문 (원본 .article) — 아래 공공누리·이전/다음글·버튼은 본문 밖 형제 요소 */}
       <ArticleRoot>
         <ArticleHead
           badges={<Badge label={item.status} variant={statusVariant(item.status)} />}
           title={item.title}
           meta={[
             { label: '작성자', value: item.writer },
-            { label: '작성일', value: <time dateTime={isoDate(item.date)} className="num">{item.date}</time> },
-            { label: '조회수', value: <span className="num">128</span> },
+            { label: '작성일', value: <time dateTime={isoDate(date)} className="num">{date}</time> },
           ]}
         />
 
         <ArticleBody>
-          {(item.detail?.question ?? ['안녕하세요. 문의 드린 내용에 대해 자세한 안내를 받고 싶습니다. 관련 절차와 유의사항을 알려주시면 감사하겠습니다.']).map((t, i) => (
-            <p key={i}>{t}</p>
-          ))}
+          {item.isPrivate ? (
+            <NoticeBox variant="info">비공개 글입니다. 작성자 본인과 담당 부서만 내용을 확인할 수 있어요.</NoticeBox>
+          ) : (
+            paragraphs(item.content ?? '')
+          )}
         </ArticleBody>
 
-        {item.status === '답변완료' && (
-          <AnswerBlock dept={item.detail?.dept ?? '담당 부서'} date={item.detail?.answerDate ?? item.date}>
-            {(item.detail?.answer ?? [
-              '안녕하세요. 에너지전환진흥원입니다.',
-              '문의해 주신 내용에 대해 담당 부서에서 확인한 결과를 안내드립니다. 추가로 궁금한 점은 고객센터(1600-0000)로 문의해 주세요. 감사합니다.',
-            ]).map((t, i) => (
-              <p key={i}>{t}</p>
-            ))}
+        {item.answer && (
+          <AnswerBlock dept={item.answerDept ?? '담당 부서'} date={item.answeredAt ? formatDate(item.answeredAt) : date}>
+            {paragraphs(item.answer)}
           </AnswerBlock>
         )}
       </ArticleRoot>
 
-      <PostNav
-        prev={{ href: '/support/qna/2028', title: '그린리모델링 지원 시 시공업체를 직접 선정할 수 있나요?', date: '2026.10.19' }}
-        next={{ href: '/support/qna/2030', title: '비공개 질문입니다.', date: '2026.10.20' }}
-      />
       <ListBtn href="/support/qna" />
     </>
   );

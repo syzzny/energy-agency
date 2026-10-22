@@ -4,15 +4,19 @@ import '@/styles/global.scss';
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { RouterProvider } from 'react-router-dom';
+import { QueryClientProvider } from '@tanstack/react-query';
+import { queryClient } from './lib/queryClient';
 import { router } from './app/router';
 import { ToastProvider } from '@/components/Toast';
 import { IconSprite } from '@/components/Icon';
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <ToastProvider>
-      <IconSprite />
-      <RouterProvider router={router} />
-    </ToastProvider>
+    <QueryClientProvider client={queryClient}>
+      <ToastProvider>
+        <IconSprite />
+        <RouterProvider router={router} />
+      </ToastProvider>
+    </QueryClientProvider>
   </StrictMode>,
 );
