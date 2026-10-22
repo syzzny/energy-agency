@@ -1,4 +1,5 @@
 import { createClient, type SupabaseClient } from '@supabase/supabase-js';
+import { ConfigError } from './errors';
 
 /**
  * Supabase 클라이언트 (브라우저용 공개 키 사용)
@@ -8,12 +9,7 @@ import { createClient, type SupabaseClient } from '@supabase/supabase-js';
 const url = import.meta.env.VITE_SUPABASE_URL as string | undefined;
 const key = import.meta.env.VITE_SUPABASE_ANON_KEY as string | undefined;
 
-export class ConfigError extends Error {
-  constructor() {
-    super('데이터 연결 설정(VITE_SUPABASE_URL, VITE_SUPABASE_ANON_KEY)이 없습니다.');
-    this.name = 'ConfigError';
-  }
-}
+export { ConfigError };
 
 let client: SupabaseClient | null = null;
 

@@ -1,5 +1,5 @@
 import { QueryClient } from '@tanstack/react-query';
-import { ConfigError } from './supabase';
+import { ConfigError } from './errors';
 
 /**
  * 서버 데이터 캐시 설정

@@ -22,5 +22,9 @@ export default defineConfig({
       },
     },
   },
+  build: {
+    // 배포된 코드에서도 원본 위치를 추적할 수 있게 (Lighthouse 권장 · 오류 디버깅용)
+    sourcemap: true,
+  },
   server: { open: true },
 });

@@ -3,7 +3,7 @@ import { Badge } from '@/components/Badge';
 import { ArticleRoot, ArticleHead, AttachmentList, ArticleBody, Figure, Kogl, PostNav, ListBtn } from '@/components/Article';
 import { Survey } from '@/components/Survey';
 import { press } from '@/data/press';
-import { imageUrl } from '@/utils/asset';
+import { photoProps } from '@/utils/asset';
 import { isoDate } from '@/utils/date';
 
 export default function PressViewPage() {
@@ -35,7 +35,7 @@ export default function PressViewPage() {
 
         <ArticleBody>
           <Figure
-            src={imageUrl(item.image)}
+            {...photoProps(item.image, '(max-width: 1023px) 100vw, 860px')}
             alt={item.detail?.figure.alt ?? `${item.title} 관련 사진`}
             caption={item.detail?.figure.caption ?? `${item.title} (사진 제공: 에너지전환진흥원)`}
           />
