@@ -242,6 +242,13 @@
     outline: none;
     border-color: c('primary');
   }
+
+  // 모바일: 높이·여백을 줄여 글자가 버튼 뒤로 가려지지 않게
+  @include down('md') {
+    height: 56px;
+    padding: 0 sp(15) 0 sp(4);
+    font-size: fs('body-sm');
+  }
 }
 
 .headerSearchSubmit {
@@ -251,7 +258,9 @@
   color: c('white');
 
   @include down('md') {
-    right: sp(7);
+    right: calc(#{$gutter-mo} + #{sp(1.5)});
+    width: 44px;
+    height: 44px;
   }
 
   :global(.icon) {

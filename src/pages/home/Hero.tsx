@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import { Icon } from '@/components/Icon';
 import { IconButton } from '@/components/Button';
 import { Badge } from '@/components/Badge';
-import { useSlider } from '@/hooks';
+import { useIsMobile, useSlider } from '@/hooks';
 import { imageUrl } from '@/utils/asset';
 import styles from './HomePage.module.scss';
 
@@ -67,6 +67,7 @@ const SLIDES = [
 ];
 
 export default function Hero() {
+  const isMobile = useIsMobile();
   const slider = useSlider({ slideCount: SLIDES.length, intervalMs: 6000 });
 
   return (
@@ -162,7 +163,7 @@ export default function Hero() {
               <label htmlFor="mainSearch" className="sr-only">
                 통합검색
               </label>
-              <input type="search" id="mainSearch" placeholder="궁금한 사업이나 서비스를 검색해 보세요" />
+              <input type="search" id="mainSearch" placeholder={isMobile ? '사업·서비스 검색' : '궁금한 사업이나 서비스를 검색해 보세요'} />
               <button type="submit">
                 <Icon name="search" />
                 <span className="sr-only">검색</span>

@@ -5,11 +5,12 @@ import accordionStyles from '@/components/AccordionItem/AccordionItem.module.scs
 import { Pagination } from '@/components/Pagination';
 import { Button } from '@/components/Button';
 import { Icon } from '@/components/Icon';
-import { useChipFilter, useAccordion } from '@/hooks';
+import { useChipFilter, useAccordion, useIsMobile } from '@/hooks';
 import { faq, faqCategories } from '@/data/faq';
 import styles from './FaqPage.module.scss';
 
 export default function FaqPage() {
+  const isMobile = useIsMobile();
   const { active, select, filtered } = useChipFilter(faq, (f) => f.category);
   const accordion = useAccordion(faq.filter((f) => f.open).map((f) => f.id));
 
@@ -20,7 +21,7 @@ export default function FaqPage() {
         <label htmlFor="faqKeyword" className="sr-only">
           FAQ 검색어
         </label>
-        <input type="search" id="faqKeyword" placeholder="궁금한 내용을 검색해 보세요 (예: 보조금 지급 시기)" />
+        <input type="search" id="faqKeyword" placeholder={isMobile ? '궁금한 내용 검색' : '궁금한 내용을 검색해 보세요 (예: 보조금 지급 시기)'} />
         <Button type="submit">검색</Button>
       </form>
 

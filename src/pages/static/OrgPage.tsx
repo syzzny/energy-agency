@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react';
+import { useIsMobile } from '@/hooks';
 import clsx from 'clsx';
 import { Button } from '@/components/Button';
 import { formStyles } from '@/components/Form';
@@ -26,6 +27,7 @@ const DEPARTMENTS = [
 ];
 
 export default function OrgPage() {
+  const isMobile = useIsMobile();
   const [division, setDivision] = useState('전체 본부');
   const [keyword, setKeyword] = useState('');
 
@@ -78,7 +80,7 @@ export default function OrgPage() {
             type="search"
             id="dutyKeyword"
             className={clsx(formStyles.input, styles.deptInput)}
-            placeholder="담당 업무를 입력해 주세요 (예: 바우처)"
+            placeholder={isMobile ? '담당 업무 (예: 바우처)' : '담당 업무를 입력해 주세요 (예: 바우처)'}
             value={keyword}
             onChange={(e) => setKeyword(e.target.value)}
           />
