@@ -9,14 +9,17 @@ import { queryClient } from './lib/queryClient';
 import { router } from './app/router';
 import { ToastProvider } from '@/components/Toast';
 import { IconSprite } from '@/components/Icon';
+import { AuthProvider } from '@/auth';
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <QueryClientProvider client={queryClient}>
-      <ToastProvider>
-        <IconSprite />
-        <RouterProvider router={router} />
-      </ToastProvider>
+      <AuthProvider>
+        <ToastProvider>
+          <IconSprite />
+          <RouterProvider router={router} />
+        </ToastProvider>
+      </AuthProvider>
     </QueryClientProvider>
   </StrictMode>,
 );

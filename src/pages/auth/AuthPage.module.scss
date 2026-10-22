@@ -1,0 +1,415 @@
+@use 'tokens' as *;
+@use 'mixins' as *;
+
+// ============================================================
+// 로그인 · 회원가입
+//  왼쪽 사진 패널(서브 비주얼과 같은 톤) + 오른쪽 폼.
+//  강조는 한 곳: 회원가입의 '비밀번호 안전 등급' (에너지효율등급 라벨 모티프)
+// ============================================================
+
+.page {
+  padding: sp(16) 0 sp(24);
+  background: c('bg');
+
+  @include down('md') {
+    padding: 0 0 sp(14);
+    background: c('white');
+  }
+}
+.inner {
+  @include container;
+
+  @include down('md') {
+    padding-inline: 0;
+  }
+}
+
+.shell {
+  display: grid;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+  max-width: 1040px;
+  margin-inline: auto;
+  overflow: hidden;
+  border-radius: r('3xl');
+  background: c('white');
+  box-shadow: shadow('sm');
+
+  @include down('lg') {
+    grid-template-columns: minmax(0, 1fr);
+    max-width: 560px;
+  }
+  @include down('md') {
+    border-radius: 0;
+    box-shadow: none;
+  }
+}
+
+// ---------- 사진 패널 ----------
+.panel {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  min-height: 520px;
+  padding: sp(12) sp(10);
+  color: c('white');
+  background: c('navy');
+  isolation: isolate;
+
+  // 사진 위 남색 그라디언트 — 글자가 읽히도록 아래쪽을 더 어둡게
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: linear-gradient(180deg, rgba(11, 31, 68, 0.35) 0%, rgba(11, 31, 68, 0.82) 55%, #0b1f44 100%);
+  }
+
+  @include down('lg') {
+    min-height: 0;
+    padding: sp(10) sp(8) sp(8);
+  }
+  @include down('md') {
+    padding: sp(8) $gutter-mo sp(7);
+  }
+}
+.panelBg {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.panelDesc {
+  max-width: 340px;
+  margin-top: sp(4);
+  color: ca('white', 0.78);
+  @include type('body-sm', null, 1.7);
+  word-break: keep-all;
+
+  @include down('md') {
+    display: none;
+  }
+}
+.panelTitle {
+  @include type('h4');
+  word-break: keep-all;
+
+  @include down('md') {
+    @include type('h6');
+  }
+}
+// ---------- 회원가입: 한 장짜리 카드 ----------
+.pageSignup {
+  background: linear-gradient(180deg, c('tint-mint') 0%, c('bg') 70%);
+
+  @include down('md') {
+    background: c('white');
+  }
+}
+.shellSignup {
+  grid-template-columns: minmax(0, 1fr);
+  max-width: 600px;
+
+  .body {
+    padding: sp(12) sp(14) sp(12);
+
+    @include down('md') {
+      padding: sp(8) $gutter-mo 0;
+    }
+  }
+}
+// 카드 맨 위 효율등급 5색 띠 — 카드뉴스 · 비밀번호 안전 등급과 같은 색
+.signupBand {
+  display: flex;
+  height: 6px;
+
+  span {
+    flex: 1;
+  }
+}
+.headArt {
+  flex-shrink: 0;
+  width: 96px;
+  height: auto;
+  margin: -8px -8px 0 0;
+
+  @include down('md') {
+    width: 72px;
+  }
+}
+
+// ---------- 폼 영역 ----------
+.body {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: sp(14) sp(16);
+
+  @include down('xl') {
+    padding: sp(12) sp(10);
+  }
+  @include down('md') {
+    padding: sp(8) $gutter-mo 0;
+  }
+}
+.head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: sp(4);
+  margin-bottom: sp(8);
+
+  h2 {
+    color: c('ink');
+    @include type('h4');
+  }
+  p {
+    max-width: 360px;
+    margin-top: sp(2);
+    color: c('gray-500');
+    @include type('body-sm');
+    word-break: keep-all;
+  }
+
+  @include down('md') {
+    margin-bottom: sp(6);
+
+    h2 {
+      @include type('h5');
+    }
+  }
+}
+
+.form {
+  display: grid;
+  gap: sp(5);
+}
+.field {
+  display: grid;
+  gap: sp(2);
+}
+.label {
+  color: c('ink');
+  @include type('label', semibold);
+}
+
+// 아이콘이 붙은 입력칸
+.control {
+  position: relative;
+
+  input {
+    padding-left: 46px;
+  }
+  &:has(.reveal) input {
+    padding-right: 52px;
+  }
+}
+.controlIcon {
+  position: absolute;
+  top: 50%;
+  left: sp(4);
+  width: 18px;
+  height: 18px;
+  color: c('gray-500');
+  transform: translateY(-50%);
+  pointer-events: none;
+
+  .control:focus-within & {
+    color: c('primary');
+  }
+}
+.reveal {
+  position: absolute;
+  top: 50%;
+  right: sp(1);
+  @include icon-box(44px, 10px);
+  color: c('gray-500');
+  transform: translateY(-50%);
+
+  :global(.icon) {
+    width: 20px;
+    height: 20px;
+  }
+  &[aria-pressed='true'] {
+    color: c('primary');
+  }
+  @include hover {
+    color: c('ink');
+  }
+  &:focus-visible {
+    @include focus-ring(-2px);
+  }
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: sp(3);
+  color: c('gray-700');
+  @include type('body-sm');
+}
+
+.alert {
+  display: flex;
+  gap: sp(2);
+  padding: sp(3) sp(4);
+  border-radius: r('md');
+  color: #b4232a;
+  background: #fff1f1;
+  @include type('body-sm', medium);
+
+  :global(.icon) {
+    flex-shrink: 0;
+    width: 18px;
+    height: 18px;
+    margin-top: 2px;
+  }
+}
+.notice {
+  composes: alert;
+  margin-bottom: sp(5);
+  color: c('green');
+  background: c('tint-mint');
+}
+
+.submit {
+  width: 100%;
+  margin-top: sp(1);
+}
+
+.foot {
+  margin-top: sp(8);
+  color: c('gray-500');
+  text-align: center;
+  @include type('body-sm');
+
+  a {
+    margin-left: sp(2);
+    color: c('primary');
+    font-weight: 700;
+
+    @include hover {
+      text-decoration: underline;
+    }
+  }
+  @include down('md') {
+    margin-top: sp(7);
+  }
+}
+
+// ---------- 비밀번호 안전 등급 (효율등급 라벨 모티프) ----------
+.grade {
+  display: grid;
+  gap: sp(3);
+  padding: sp(4);
+  border-radius: r('md');
+  background: c('gray-100');
+}
+.gradeScale {
+  display: flex;
+  align-items: flex-end;
+  gap: 3px;
+  height: 30px;
+
+  span {
+    display: grid;
+    flex: 1;
+    place-items: center;
+    height: 18px;
+    border-radius: 4px;
+    color: c('white');
+    font-family: $font-num;
+    font-size: 11px;
+    font-weight: 700;
+    line-height: 1;
+    opacity: 0.25;
+    transition: height 0.25s $ease, opacity 0.25s;
+  }
+  // 지금 등급: 키가 커지고 또렷해진다 (라벨의 ◀ 화살표 역할)
+  span.gradeOn {
+    height: 30px;
+    font-size: 13px;
+    opacity: 1;
+  }
+}
+.gradeInfo {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: sp(2) sp(4);
+}
+.gradeText {
+  color: c('gray-700');
+  @include type('caption', medium);
+
+  strong {
+    color: c('ink');
+    font-weight: 700;
+  }
+}
+.rules {
+  display: flex;
+  gap: sp(3);
+
+  li {
+    display: inline-flex;
+    align-items: center;
+    gap: sp(1);
+    color: c('gray-500');
+    @include type('caption');
+  }
+  :global(.icon) {
+    width: 14px;
+    height: 14px;
+    stroke-width: 2.5;
+    opacity: 0.4;
+  }
+  .ruleOk {
+    color: c('green');
+    font-weight: 600;
+
+    :global(.icon) {
+      opacity: 1;
+    }
+  }
+}
+
+// 비밀번호 확인 일치
+.match {
+  display: inline-flex;
+  align-items: center;
+  gap: sp(1);
+  color: c('green') !important;
+  font-weight: 600;
+
+  :global(.icon) {
+    width: 14px;
+    height: 14px;
+    stroke-width: 2.5;
+  }
+}
+
+// ---------- 가입 완료(메일 인증 안내) ----------
+.done {
+  display: grid;
+  justify-items: start;
+  gap: sp(4);
+
+  p {
+    color: c('gray-700');
+    @include type('body', null, 1.7);
+  }
+  strong {
+    color: c('ink');
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gradeScale span {
+    transition: none;
+  }
+}

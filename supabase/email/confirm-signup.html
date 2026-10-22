@@ -1,0 +1,104 @@
+<!--
+  Supabase → Authentication → Emails → Confirm signup 에 붙여 넣는 메일 본문
+  제목(Subject): [에너지전환진흥원] 이메일 인증을 완료해 주세요
+  - 메일 프로그램(Gmail · 네이버 · Outlook)마다 CSS 지원이 달라서, 표(table) + 인라인 스타일로만 만들었다.
+  - {{ .Data.name }} 은 회원가입 때 입력한 이름, {{ .ConfirmationURL }} 은 인증 링크.
+-->
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>이메일 인증</title>
+</head>
+<body style="margin:0;padding:0;background:#f5f7fb;">
+  <!-- 미리보기 문구(받은편지함 제목 옆에 보이는 한 줄) -->
+  <div style="display:none;max-height:0;overflow:hidden;opacity:0;">아래 버튼을 누르면 가입이 완료돼요. 링크는 1시간 동안 유효해요.</div>
+
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#f5f7fb;">
+    <tr>
+      <td align="center" style="padding:40px 16px;">
+        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="max-width:560px;background:#ffffff;border-radius:20px;overflow:hidden;font-family:'Pretendard','Apple SD Gothic Neo','Malgun Gothic','맑은 고딕',sans-serif;">
+
+          <!-- 효율등급 5색 띠 (사이트 회원가입 카드와 같은 장치) -->
+          <tr>
+            <td style="padding:0;">
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+                <tr>
+                  <td height="6" style="height:6px;line-height:6px;font-size:0;background:#00a651;">&nbsp;</td>
+                  <td height="6" style="height:6px;line-height:6px;font-size:0;background:#8cc63f;">&nbsp;</td>
+                  <td height="6" style="height:6px;line-height:6px;font-size:0;background:#f2c500;">&nbsp;</td>
+                  <td height="6" style="height:6px;line-height:6px;font-size:0;background:#f7941d;">&nbsp;</td>
+                  <td height="6" style="height:6px;line-height:6px;font-size:0;background:#e5352c;">&nbsp;</td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <!-- 기관명 -->
+          <tr>
+            <td style="padding:32px 40px 0;font-size:16px;font-weight:700;color:#151a26;letter-spacing:-0.02em;">
+              <span style="display:inline-block;width:12px;height:12px;border-radius:4px;background:#1d5bd8;vertical-align:-1px;margin-right:8px;"></span>에너지전환진흥원
+            </td>
+          </tr>
+
+          <!-- 본문 -->
+          <tr>
+            <td style="padding:28px 40px 8px;">
+              <h1 style="margin:0;word-break:keep-all;font-size:24px;line-height:1.4;font-weight:700;color:#151a26;letter-spacing:-0.03em;">{{ .Data.name }}님, 가입을 환영해요</h1>
+              <p style="margin:12px 0 0;word-break:keep-all;font-size:15px;line-height:1.7;color:#3d4556;letter-spacing:-0.02em;">
+                아래 버튼을 누르면 이메일 인증이 끝나고 바로 로그인할 수 있어요. 회원이 되면 질문 등록 때 이름이 자동으로 들어가고, 비공개 질문의 답변도 다시 볼 수 있어요.
+              </p>
+            </td>
+          </tr>
+
+          <!-- 버튼 -->
+          <tr>
+            <td style="padding:24px 40px 8px;">
+              <table role="presentation" cellpadding="0" cellspacing="0" border="0">
+                <tr>
+                  <td align="center" bgcolor="#1d5bd8" style="border-radius:12px;">
+                    <a href="{{ .ConfirmationURL }}" target="_blank" style="display:inline-block;padding:16px 36px;font-size:16px;font-weight:700;color:#ffffff;text-decoration:none;letter-spacing:-0.02em;">이메일 인증하기</a>
+                  </td>
+                </tr>
+              </table>
+              <p style="margin:14px 0 0;font-size:13px;line-height:1.6;color:#5c6375;">링크는 1시간 동안 유효해요.</p>
+            </td>
+          </tr>
+
+          <!-- 가입 정보 -->
+          <tr>
+            <td style="padding:24px 40px 0;">
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#f2f4f8;border-radius:12px;">
+                <tr>
+                  <td style="padding:16px 20px;font-size:14px;line-height:1.6;color:#3d4556;">
+                    <span style="color:#5c6375;">가입한 이메일</span><br />
+                    <strong style="color:#151a26;">{{ .Email }}</strong>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <!-- 버튼이 안 눌릴 때 -->
+          <tr>
+            <td style="padding:24px 40px 32px;">
+              <p style="margin:0;font-size:13px;line-height:1.6;color:#5c6375;">버튼이 눌리지 않으면 아래 주소를 복사해 브라우저에 붙여 넣어 주세요.</p>
+              <p style="margin:6px 0 0;font-size:12px;line-height:1.6;word-break:break-all;"><a href="{{ .ConfirmationURL }}" style="color:#1d5bd8;">{{ .ConfirmationURL }}</a></p>
+            </td>
+          </tr>
+
+          <!-- 푸터 -->
+          <tr>
+            <td style="padding:20px 40px 28px;border-top:1px solid #e3e7ee;word-break:keep-all;font-size:12px;line-height:1.7;color:#5c6375;">
+              본인이 가입하지 않았다면 이 메일을 무시해 주세요. 인증하지 않으면 로그인할 수 없어요.<br />
+              이 메일은 발신 전용이라 회신할 수 없어요. 문의는 고객센터 1600-0000 으로 해 주세요.<br />
+              <span style="color:#8a90a0;">에너지전환진흥원은 포트폴리오용 가상 기관입니다.</span>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>

@@ -5,6 +5,7 @@ import { useFontSize, useGnbMegaMenu, useHeaderSearch, useIsMobile } from '@/hoo
 import { useRouteHandle } from '@/app/useRouteHandle';
 import { useAllMenu } from '@/app/AllMenuContext';
 import Gnb from './Gnb';
+import { useAuthLinks } from './useAuthLinks';
 import styles from './Header.module.scss';
 
 /** 헤더: 유틸리티 바 + GNB 메가메뉴 + 통합검색. 전체메뉴 다이얼로그는 AllMenuProvider가 소유한다. */
@@ -16,6 +17,7 @@ export default function Header() {
   const fontSize = useFontSize();
   // 모바일은 입력창이 좁아 안내문을 짧게 보여 준다
   const isMobile = useIsMobile();
+  const { user, loginHref, onSignOut } = useAuthLinks();
 
   return (
     <>
@@ -35,12 +37,30 @@ export default function Header() {
               이 누리집은 에너지전환진흥원 공식 누리집입니다.
             </p>
             <ul className={styles.utilBarLinks}>
-              <li>
-                <a href="#">로그인</a>
-              </li>
-              <li>
-                <a href="#">회원가입</a>
-              </li>
+              {user ? (
+                <>
+                  <li className={styles.utilBarUser}>
+                    <strong>{user.name}</strong>님
+                  </li>
+                  <li>
+                    <Link to="/support/qna/mine">내 질문</Link>
+                  </li>
+                  <li>
+                    <button type="button" onClick={onSignOut}>
+                      로그아웃
+                    </button>
+                  </li>
+                </>
+              ) : (
+                <>
+                  <li>
+                    <Link to={loginHref}>로그인</Link>
+                  </li>
+                  <li>
+                    <Link to="/signup">회원가입</Link>
+                  </li>
+                </>
+              )}
               <li>
                 <a
                   href="#"

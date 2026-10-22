@@ -38,12 +38,21 @@
     color: c('gray-700');
     @include type('caption');
 
-    a {
+    a,
+    button {
+      color: inherit;
+      font: inherit;
+
       @include hover {
         color: c('primary');
         text-decoration: underline;
       }
     }
+  }
+
+  &User strong {
+    color: c('ink');
+    font-weight: 700;
   }
 
   &En {
@@ -588,6 +597,12 @@ $col-w: 157px;
   .allmenuMoUtil {
     display: flex;
     gap: sp(4);
+
+    button {
+      color: inherit;
+      font: inherit;
+    }
+
     order: 3;
     width: 100%;
     color: c('gray-700');
