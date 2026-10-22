@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 import clsx from 'clsx';
 import { Icon } from '@/components/Icon';
-import { useFontSize, useGnbMegaMenu, useHeaderSearch } from '@/hooks';
+import { useFontSize, useGnbMegaMenu, useHeaderSearch, useIsMobile } from '@/hooks';
 import { useRouteHandle } from '@/app/useRouteHandle';
 import { useAllMenu } from '@/app/AllMenuContext';
 import Gnb from './Gnb';
@@ -14,6 +14,8 @@ export default function Header() {
   const allmenu = useAllMenu();
   const search = useHeaderSearch<HTMLInputElement, HTMLButtonElement>();
   const fontSize = useFontSize();
+  // 모바일은 입력창이 좁아 안내문을 짧게 보여 준다
+  const isMobile = useIsMobile();
 
   return (
     <>
@@ -132,7 +134,7 @@ export default function Header() {
                 type="search"
                 id="headerSearchInput"
                 className={styles.headerSearchInputEl}
-                placeholder="궁금한 사업이나 서비스를 검색해 보세요"
+                placeholder={isMobile ? '사업·서비스 검색' : '궁금한 사업이나 서비스를 검색해 보세요'}
                 ref={search.inputRef}
               />
               <button type="submit" className={styles.headerSearchSubmit}>

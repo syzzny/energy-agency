@@ -41,8 +41,8 @@
 }
 
 
+// 제목 링크의 ::after 가 .item 전체(썸네일 포함)를 덮어 카드 어디를 눌러도 상세로 이동한다
 .title {
-  position: relative;
   margin-top: sp(4);
   @include ellipsis(2);
   @include type('body-lg', bold, 1.45, -0.03em);
