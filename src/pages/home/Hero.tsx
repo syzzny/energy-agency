@@ -1,5 +1,5 @@
 import clsx from 'clsx';
-import type { CSSProperties } from 'react';
+import { useEffect, useState, type CSSProperties } from 'react';
 import { Link } from 'react-router-dom';
 import { Icon } from '@/components/Icon';
 import { IconButton } from '@/components/Button';
@@ -66,9 +66,19 @@ const SLIDES = [
   },
 ];
 
+/** 첫 슬라이드가 뜨고 이 시간이 지난 뒤에야 나머지 슬라이드 사진을 받는다 (첫 로딩 용량 절약) */
+const WARM_UP_MS = 2500;
+
 export default function Hero() {
   const isMobile = useIsMobile();
   const slider = useSlider({ slideCount: SLIDES.length, intervalMs: 6000 });
+  // 2·3번째 사진은 첫 화면에 보이지 않는데도 같은 위치에 겹쳐 있어 lazy 로는 미뤄지지 않는다.
+  // 그래서 처음엔 주소(src)를 비워 두었다가, 잠시 뒤(또는 사용자가 넘기면 즉시) 채운다.
+  const [warm, setWarm] = useState(false);
+  useEffect(() => {
+    const t = setTimeout(() => setWarm(true), WARM_UP_MS);
+    return () => clearTimeout(t);
+  }, []);
 
   return (
     <section className={styles.hero} aria-label="주요 안내">
@@ -85,12 +95,11 @@ export default function Hero() {
               <img
                 key={s.bg}
                 className={clsx(styles.heroBg, i === slider.index && styles.active)}
-                src={imageUrl(s.bg)}
+                src={i === 0 || i === slider.index || warm ? imageUrl(s.bg) : undefined}
                 alt=""
                 width={1376}
                 height={768}
                 fetchPriority={i === 0 ? 'high' : undefined}
-                loading={i === 0 ? undefined : 'lazy'}
               />
             ))}
           </div>

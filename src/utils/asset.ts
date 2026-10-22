@@ -19,3 +19,14 @@ export function photoProps(key: string, sizes = '100vw') {
     sizes,
   };
 }
+
+/**
+ * 3D 일러스트(3d-*) 반응형 속성 — 카드 안에 작게(약 130~200px) 보이므로 320px 판을 주로 쓴다
+ */
+export function artProps(key: string, sizes = '(min-width: 768px) and (max-width: 1023px) 250px, 160px') {
+  return {
+    src: imageUrl(key),
+    srcSet: `${imageUrl(`${key}-320`)} 320w, ${imageUrl(key)} 480w`,
+    sizes,
+  };
+}

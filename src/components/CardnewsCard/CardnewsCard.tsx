@@ -2,7 +2,7 @@ import clsx from 'clsx';
 import type { CSSProperties } from 'react';
 import { Icon } from '@/components/Icon';
 import type { CardnewsItem, CardnewsSlide } from '@/data/types';
-import { imageUrl, multiline } from '@/utils';
+import { artProps, multiline } from '@/utils';
 import styles from './CardnewsCard.module.scss';
 
 /**
@@ -70,7 +70,7 @@ function SlideBody({ slide, image }: { slide: CardnewsSlide; image: string }) {
           <h4 className={styles.coverTitle}>{multiline(slide.title)}</h4>
           <p className={styles.coverSub}>{slide.sub}</p>
           <span className={styles.coverArt} aria-hidden="true">
-            <img src={imageUrl(image)} alt="" width={480} height={480} loading="lazy" />
+            <img {...artProps(image)} alt="" width={480} height={480} loading="lazy" />
           </span>
         </>
       );
