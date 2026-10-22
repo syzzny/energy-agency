@@ -52,6 +52,8 @@ export const router = createBrowserRouter([
           { path: 'business/:id', element: <BusinessDetailPage />, handle: handle('business', null, { contentClass: 'contentWideGap' }) },
 
           { path: 'info/disclosure', element: <DisclosureListPage />, handle: handle('info', 'disclosure') },
+          // 차트 라이브러리(ECharts)가 무거워서 이 페이지에 들어올 때만 따로 불러온다 (코드 분할)
+          { path: 'info/stats', lazy: async () => ({ Component: (await import('@/pages/stats/StatsPage')).default }), handle: handle('info', 'stats') },
           { path: 'info/request', element: <InfoRequestPage />, handle: handle('info', 'request', { contentClass: 'contentWideGap' }) },
 
           { path: 'news/notice', element: <NoticeListPage />, handle: handle('news', 'notice') },

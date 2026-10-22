@@ -1,0 +1,378 @@
+@use 'tokens' as *;
+@use 'mixins' as *;
+
+.dashboard {
+  display: grid;
+  gap: sp(6);
+}
+
+// ---------- 필터 ----------
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: sp(3) sp(4);
+  padding: sp(5) sp(6);
+  border-radius: r('lg');
+  background: c('bg');
+
+  @include down('md') {
+    padding: sp(4);
+  }
+}
+.filter {
+  display: grid;
+  gap: sp(1.5);
+  min-width: 180px;
+
+  > span:first-child {
+    color: c('gray-700');
+    @include type('label', semibold);
+  }
+
+  @include down('md') {
+    flex: 1 1 0;
+    min-width: 0;
+  }
+}
+.reset {
+  display: inline-flex;
+  align-items: center;
+  gap: sp(1);
+  height: 48px;
+  padding: 0 sp(2);
+  color: c('gray-500');
+  @include type('label');
+
+  :global(.icon) {
+    width: 16px;
+    height: 16px;
+  }
+  @include hover {
+    color: c('ink');
+  }
+  &:focus-visible {
+    @include focus-ring;
+  }
+}
+
+// ---------- 핵심 지표 ----------
+.kpis {
+  display: grid;
+  grid-template-columns: 1.4fr repeat(3, 1fr);
+  gap: sp(4);
+
+  @include down('lg') {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+
+    // 대표 지표가 한 줄을 차지하므로 마지막 하나가 혼자 남지 않게 한 줄로
+    > :nth-child(4) {
+      grid-column: 1 / -1;
+    }
+  }
+  @include down('md') {
+    gap: sp(3);
+  }
+}
+.kpi {
+  display: grid;
+  align-content: start;
+  gap: sp(1.5);
+  min-width: 0;
+  min-height: 148px;
+  padding: sp(6);
+  border: 1px solid c('gray-200');
+  border-radius: r('lg');
+  background: c('white');
+
+  @include down('md') {
+    min-height: 0;
+    padding: sp(4);
+  }
+}
+.kpiHero {
+  border-color: transparent;
+  color: c('white');
+  background: c('navy');
+
+  .kpiLabel,
+  .kpiSub {
+    color: ca('white', 0.72);
+  }
+  .kpiValue {
+    @include type('h3');
+    @include down('md') {
+      @include type('h4');
+    }
+  }
+  .delta.up {
+    color: c('mint');
+  }
+  .delta.down {
+    color: #ffb4b0;
+  }
+
+  @include down('lg') {
+    grid-column: 1 / -1;
+  }
+}
+.kpiLabel {
+  color: c('gray-500');
+  @include type('label');
+}
+.kpiValue {
+  display: flex;
+  align-items: baseline;
+  gap: sp(1.5);
+  color: c('ink');
+  @include type('h5');
+  word-break: keep-all;
+
+  .kpiHero & {
+    color: c('white');
+  }
+
+  small {
+    @include type('body-sm', medium);
+    opacity: 0.8;
+  }
+  @include down('md') {
+    @include type('title-lg');
+  }
+}
+.kpiDot {
+  flex-shrink: 0;
+  align-self: center;
+  width: 10px;
+  height: 10px;
+  border-radius: 3px;
+}
+.kpiSub {
+  color: c('gray-500');
+  @include type('caption');
+}
+.delta {
+  display: inline-flex;
+  align-items: center;
+  gap: sp(1);
+  @include type('label', semibold);
+
+  :global(.icon) {
+    width: 16px;
+    height: 16px;
+    stroke-width: 2.4;
+  }
+  &.up {
+    color: c('green');
+  }
+  &.down {
+    color: c('red');
+  }
+}
+
+// ---------- 차트 카드 ----------
+.card {
+  min-width: 0;
+  padding: sp(7) sp(8) sp(5);
+  border: 1px solid c('gray-200');
+  border-radius: r('xl');
+  background: c('white');
+
+  @include down('md') {
+    padding: sp(5) sp(4) sp(3);
+    border-radius: r('lg');
+  }
+}
+.cardHead {
+  margin-bottom: sp(4);
+
+  h3 {
+    color: c('ink');
+    @include type('title-lg');
+  }
+  p {
+    margin-top: sp(1);
+    color: c('gray-500');
+    @include type('caption');
+  }
+}
+.split {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: start;
+  gap: sp(6);
+
+  @include down('lg') {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: sp(1) sp(4);
+  margin-bottom: sp(2);
+
+  li {
+    display: inline-flex;
+    align-items: center;
+    gap: sp(1.5);
+    color: c('gray-700');
+    @include type('caption', medium);
+  }
+  span {
+    width: 10px;
+    height: 10px;
+    border-radius: 3px;
+  }
+}
+
+// 도넛 + 값 목록
+.donut {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  align-items: center;
+  gap: sp(4);
+
+  @include down('md') {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+.sourceList {
+  display: grid;
+
+  li {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: center;
+    gap: 0 sp(3);
+    padding: sp(2.5) 0;
+    border-bottom: 1px solid c('gray-100');
+
+    &:last-child {
+      border-bottom: 0;
+    }
+  }
+}
+.sourceName {
+  display: inline-flex;
+  align-items: center;
+  gap: sp(2);
+  color: c('ink');
+  @include type('body-sm', semibold);
+}
+.sourceDot {
+  width: 10px;
+  height: 10px;
+  border-radius: 3px;
+}
+.sourceShare {
+  color: c('ink');
+  font-family: $font-num;
+  @include type('body-sm', bold);
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}
+.sourceValue {
+  grid-column: 1 / -1;
+  padding-left: sp(4.5);
+  color: c('gray-500');
+  @include type('tiny');
+  font-variant-numeric: tabular-nums;
+}
+
+// ---------- 표로 보기 ----------
+.tableToggle {
+  margin-top: sp(3);
+  border-top: 1px solid c('gray-100');
+
+  summary {
+    display: inline-flex;
+    align-items: center;
+    gap: sp(1);
+    min-height: 44px;
+    padding-top: sp(1);
+    color: c('gray-700');
+    cursor: pointer;
+    list-style: none;
+    @include type('label', semibold);
+
+    &::-webkit-details-marker {
+      display: none;
+    }
+    :global(.icon) {
+      width: 16px;
+      height: 16px;
+      transition: transform 0.2s;
+    }
+    &:focus-visible {
+      @include focus-ring;
+    }
+  }
+  &[open] summary :global(.icon) {
+    transform: rotate(180deg);
+  }
+}
+.tableWrap {
+  overflow-x: auto;
+  padding-bottom: sp(2);
+}
+.table {
+  width: 100%;
+  min-width: 360px;
+  border-top: 2px solid c('ink');
+  font-variant-numeric: tabular-nums;
+  @include type('caption');
+
+  th,
+  td {
+    padding: sp(2.5) sp(3);
+    border-bottom: 1px solid c('gray-200');
+    text-align: right;
+    white-space: nowrap;
+  }
+  thead th {
+    color: c('gray-700');
+    background: c('gray-100');
+    font-weight: 600;
+    text-align: center;
+  }
+  tbody th {
+    color: c('ink');
+    font-weight: 600;
+    text-align: left;
+  }
+  .current {
+    background: c('tint-row');
+
+    th,
+    td {
+      color: c('primary-dark');
+      font-weight: 700;
+    }
+  }
+}
+
+// ---------- 로딩 ----------
+.skeleton {
+  border-color: transparent;
+  background: linear-gradient(90deg, c('gray-100') 25%, c('gray-200') 50%, c('gray-100') 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.4s ease-in-out infinite;
+}
+.skeletonChart {
+  height: 420px;
+}
+@keyframes shimmer {
+  from {
+    background-position: 100% 0;
+  }
+  to {
+    background-position: -100% 0;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .skeleton {
+    animation: none;
+  }
+}
